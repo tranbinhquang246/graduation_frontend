@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { Footer, Header } from "../components";
 
-export const ProductsMainLayout = () => {
+export const MainLayout = () => {
   return (
-    <div className="relative flex flex-col w-full h-full">
+    <div className="relative flex flex-col w-full h-full font-ubuntu">
       <Header />
       <div className="w-full h-full flex">
         <Outlet />
@@ -19,4 +19,4 @@ const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductsMainLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
