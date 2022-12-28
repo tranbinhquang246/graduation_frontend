@@ -1,18 +1,24 @@
 import { Form, Input, Button, Checkbox } from "antd";
+
 import { IMAGES } from "../../assets";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { RootState } from "../../redux/store";
-import { loginRequest } from "../../redux/auth/actions";
+import { signupRequest } from "../../redux/auth/actions";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { checkAuthentication } from "../../service";
 import { Footer } from "../../components";
 
-const LoginPage: React.FC<Props> = ({
+type SignUpType = {
+  agreement: boolean;
+  email: string;
+  password: string;
+  repassword: string;
+};
+const SignupPage: React.FC<Props> = ({
   loading,
   isAuthenticated,
-  loginRequest,
+  signupRequest,
 }) => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -21,9 +27,11 @@ const LoginPage: React.FC<Props> = ({
       navigate("/");
     }
   }, [isAuthenticated]);
-  const onFinish = (values: { email: string; password: string }) => {
-    loginRequest(values);
+
+  const onFinish = async (values: SignUpType) => {
+    signupRequest({ email: values.email, password: values.password });
   };
+
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
@@ -40,9 +48,9 @@ const LoginPage: React.FC<Props> = ({
         </div>
         <div className="w-full sm:w-1/2 p-4 flex flex-col items-center justify-center mt-5 sm:mt-[50px]">
           <div className="w-full flex flex-col items-center text-slate-800">
-            <p className="font-bold text-2xl">Login to Grapro</p>
-            <p className="font-thin text-xs">
-              Please login to enjoy exclusive privileges for you
+            <p className="font-bold text-2xl text-center">Signup to Grapro</p>
+            <p className="font-thin text-xs text-center">
+              Please signup to enjoy exclusive privileges for you
             </p>
           </div>
           <Form
@@ -63,18 +71,51 @@ const LoginPage: React.FC<Props> = ({
               name="password"
               rules={[
                 { required: true, message: "Please input your password!" },
+                { min: 8, message: "Minimum length 8 characters" },
               ]}
             >
               <Input.Password placeholder="Password" className="h-8" />
             </Form.Item>
 
-            <Form.Item>
-              <Checkbox>Save Your Account</Checkbox>
+            <Form.Item
+              name="repassword"
+              rules={[
+                { required: true, message: "Please input your password!" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        "The two passwords that you entered do not match!"
+                      )
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input.Password placeholder="Re-password" className="h-8" />
+            </Form.Item>
+
+            <Form.Item
+              name="agreement"
+              valuePropName="checked"
+              rules={[
+                {
+                  validator: (_, value) =>
+                    value
+                      ? Promise.resolve()
+                      : Promise.reject(new Error("Should accept agreement")),
+                },
+              ]}
+            >
+              <Checkbox>I agree to your terms and services</Checkbox>
             </Form.Item>
             <Form.Item>
               <Button
                 type="primary"
-                loading={loading}
+                loading={false}
                 htmlType="submit"
                 className="w-full h-8 bg-blue-600"
               >
@@ -83,13 +124,13 @@ const LoginPage: React.FC<Props> = ({
             </Form.Item>
           </Form>
           <div className="flex flex-row justify-center items-center text-xs">
-            <p>Don't have an account?</p>
+            <p>Have an account?</p>
             &nbsp;
             <Link
-              to="/signup"
+              to="/login"
               className="text-blue-700 justify-center text-center"
             >
-              Sign Up
+              Sign In
             </Link>
           </div>
           <div className="w-3/4 h-[1px] bg-slate-300 m-5"></div>
@@ -124,6 +165,6 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = { loginRequest };
+const mapDispatchToProps = { signupRequest };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SignupPage);
