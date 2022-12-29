@@ -1,0 +1,11 @@
+.react-slideshow-container {
+max-height:420px !important;
+padding:20px !important;
+}
+.react-slideshow-fadezoom-wrapper {
+max-height:420px !important;
+}
+
+.default-nav {
+display:none !important
+}

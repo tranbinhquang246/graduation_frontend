@@ -14,7 +14,7 @@ import { FaBloggerB } from "react-icons/fa";
 export const HeaderSection = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex h-[56px] justify-between bg-slate-200">
+    <div className="flex fixed z-10 h-[56px] w-full justify-between bg-slate-800">
       <img
         src={IMAGES.logoApp}
         alt="logo"
@@ -26,8 +26,8 @@ export const HeaderSection = () => {
             to="/"
             className={({ isActive }) =>
               isActive
-                ? "flex items-center h-full text-blue-600 text-xs text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-600"
-                : "text-[#494c4f] font-medium text-xs cursor-pointer hover:text-blue-600 hover: duration-300"
+                ? "flex items-center h-full text-blue-300 text-sm text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-300"
+                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover: duration-300"
             }
           >
             <p className="hidden md:block">Homepage</p>
@@ -43,8 +43,8 @@ export const HeaderSection = () => {
             to="/products"
             className={({ isActive }) =>
               isActive
-                ? "flex items-center h-full text-blue-600 text-xs text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-600"
-                : "text-[#494c4f] font-medium text-xs cursor-pointer hover:text-blue-600 hover: duration-300"
+                ? "flex items-center h-full text-blue-300 text-sm text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-300"
+                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover: duration-300"
             }
           >
             <p className="hidden md:block">Products</p>
@@ -59,8 +59,8 @@ export const HeaderSection = () => {
             to="/about-me"
             className={({ isActive }) =>
               isActive
-                ? "flex items-center h-full text-blue-600 text-xs text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-600"
-                : "text-[#494c4f] font-medium text-xs cursor-pointer hover:text-blue-600 hover: duration-300"
+                ? "flex items-center h-full text-blue-300 text-sm text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-300"
+                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover: duration-300"
             }
           >
             <p className="hidden md:block">About Me</p>
@@ -75,8 +75,8 @@ export const HeaderSection = () => {
             to="/tracking"
             className={({ isActive }) =>
               isActive
-                ? "flex items-center h-full text-blue-600 text-xs text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-600"
-                : "text-[#494c4f] font-medium text-xs cursor-pointer hover:text-blue-600 hover: duration-300"
+                ? "flex items-center h-full text-blue-300 text-sm text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-300"
+                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover: duration-300"
             }
           >
             <p className="hidden md:block">Track Order</p>
@@ -91,8 +91,8 @@ export const HeaderSection = () => {
             to="/blog"
             className={({ isActive }) =>
               isActive
-                ? "flex items-center h-full text-blue-600 text-xs text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-600"
-                : "text-[#494c4f] font-medium text-xs cursor-pointer hover:text-blue-600 hover:duration-300"
+                ? "flex items-center h-full text-blue-300 text-sm text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-300"
+                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover:duration-300"
             }
           >
             <p className="hidden md:block">Blog</p>
