@@ -25,6 +25,7 @@ const SignupPage: React.FC<Props> = ({
     const checkAuth = checkAuthentication();
     if (checkAuth) {
       navigate("/");
+      return;
     }
   }, [isAuthenticated]);
 

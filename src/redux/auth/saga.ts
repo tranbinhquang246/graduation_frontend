@@ -9,6 +9,8 @@ import {
 } from "./actions";
 import { login as loginApi } from "./api";
 import { signup as signupApi } from "./api";
+import { AxiosError } from "axios";
+import { handleError } from "../../service";
 
 function* loginSaga(
   action: ReturnType<typeof loginRequest>
@@ -40,11 +42,17 @@ function* handleSignupSuccess(response: any) {
   yield localStorage.setItem("jwt_token", response.payload.data.access_token);
 }
 
+function* handleFailure(err: { payload: AxiosError }) {
+  yield handleError(err.payload);
+}
+
 export default function authSaga() {
   return [
     takeEvery(loginRequest, loginSaga),
     takeEvery(loginSuccess, handleLoginSuccess),
+    takeEvery(loginFailure, handleFailure),
     takeEvery(signupRequest, signupSaga),
     takeEvery(signupSuccess, handleSignupSuccess),
+    takeEvery(signupFailure, handleFailure),
   ];
 }

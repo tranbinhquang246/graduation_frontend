@@ -1,0 +1,13 @@
+.ant-input-number-input{
+	text-align:center !important;
+}
+.ant-input-number-handler-wrap{
+	display:none !important;
+}
+.add-button{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	height: 100%;
+	min-width: 42px;
+}

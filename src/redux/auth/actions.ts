@@ -8,3 +8,5 @@ export const loginFailure = createAction<any>("LOGIN_FAILURE");
 export const signupRequest = createAction<SignupPayload>("SIGNUP_REQUEST");
 export const signupSuccess = createAction<any>("SIGNUP_SUCCESS");
 export const signupFailure = createAction<any>("SIGNUP_FAILURE");
+
+export const setAuthentication = createAction<any>("SET_AUTHENTICATION");

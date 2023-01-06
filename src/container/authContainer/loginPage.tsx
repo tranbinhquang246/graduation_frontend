@@ -19,6 +19,7 @@ const LoginPage: React.FC<Props> = ({
     const checkAuth = checkAuthentication();
     if (checkAuth) {
       navigate("/");
+      return;
     }
   }, [isAuthenticated]);
   const onFinish = (values: { email: string; password: string }) => {

@@ -6,6 +6,7 @@ import {
   signupRequest,
   signupSuccess,
   signupFailure,
+  setAuthentication,
 } from "./actions";
 
 const initialState = {
@@ -36,5 +37,8 @@ export const authReducer = createReducer(initialState, (builder) => {
     .addCase(signupFailure, (state, action) => {
       state.loading = false;
       state.isAuthenticated = false;
+    })
+    .addCase(setAuthentication, (state, action) => {
+      state.isAuthenticated = true;
     });
 });

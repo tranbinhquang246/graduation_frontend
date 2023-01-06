@@ -11,7 +11,7 @@ export const CardItem = (props: any) => {
   };
   return (
     <div
-      className="relative flex flex-col items-center h-[312px] min-w-[228px] max-w-[300px] bg-slate-100 p-1 m-2 hover:cursor-pointer shadow-2xl rounded-md hover:scale-110 transition duration-300 ease-in-out"
+      className="relative flex flex-col items-center h-[312px] min-w-[228px] max-w-[300px] bg-slate-200 p-1 m-2 hover:cursor-pointer shadow-2xl rounded-md hover:scale-110 transition duration-300 ease-in-out"
       onClick={handleClickItem}
     >
       <img

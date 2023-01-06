@@ -6,6 +6,9 @@ import backgroundImageProduct from "./backgroundHometab.jpg";
 import HANOI from "./hanoi.jpg";
 import DANANG from "./danang.jpg";
 import TPHCM from "./tpHCM.jpg";
+import backgroundProduct from "./backgroundProduct.jpg";
+import noProductFound from "./noProduct.png";
+import userImage from "./user.png";
 export const IMAGES = {
   loginImage,
   logoApp,
@@ -15,4 +18,7 @@ export const IMAGES = {
   HANOI,
   DANANG,
   TPHCM,
+  backgroundProduct,
+  noProductFound,
+  userImage,
 };
