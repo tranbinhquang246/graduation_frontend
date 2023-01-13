@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Carousel } from "antd";
-import "./carousel.css";
+import "./styles/carousel.css";
 
 const CarouselComponent: React.FC = () => {
   return (

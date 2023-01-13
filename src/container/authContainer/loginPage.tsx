@@ -6,7 +6,6 @@ import { RootState } from "../../redux/store";
 import { loginRequest } from "../../redux/auth/actions";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { checkAuthentication } from "../../service";
 import { Footer } from "../../components";
 
 const LoginPage: React.FC<Props> = ({
@@ -16,8 +15,7 @@ const LoginPage: React.FC<Props> = ({
 }) => {
   const navigate = useNavigate();
   useEffect(() => {
-    const checkAuth = checkAuthentication();
-    if (checkAuth) {
+    if (isAuthenticated) {
       navigate("/");
       return;
     }

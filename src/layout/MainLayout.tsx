@@ -5,7 +5,7 @@ import { Footer, Header } from "../components";
 
 export const MainLayout = () => {
   return (
-    <div className="relative flex flex-col w-full h-full font-ubuntu">
+    <div className="relative flex flex-col w-full h-full font-ubuntu min-w-[375px]">
       <Header />
       <div className="w-full h-full flex">
         <Outlet />

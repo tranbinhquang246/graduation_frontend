@@ -11,8 +11,10 @@ import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { debounce } from "lodash";
 import { Input } from "antd";
+import { handleError } from "../../service";
+import { setLoading } from "../../redux/loading/actions";
 
-export const ProductsPage = () => {
+export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
   const styleBackgroundImage: React.CSSProperties = {
     backgroundImage: `url(${IMAGES.backgroundProduct})`,
   };
@@ -22,6 +24,7 @@ export const ProductsPage = () => {
   const [currentPages, setCurrentPages] = useState(1);
   const searchKeyWord = searchParams.get("search") || "";
   useEffect(() => {
+    setLoading(true);
     axios
       .get(
         `${process.env.REACT_APP_API_URL}products/all?type=${
@@ -39,7 +42,12 @@ export const ProductsPage = () => {
         setTotalPages(response?.data.totalPage);
         setCurrentPages(response?.data.currentPage);
       })
-      .catch(() => {});
+      .catch((error) => {
+        handleError(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [searchParams]);
 
   const debouncedSearch = React.useRef(
@@ -115,8 +123,9 @@ export const ProductsPage = () => {
   );
 };
 
+type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps;
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { setLoading };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductsPage);

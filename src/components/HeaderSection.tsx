@@ -18,11 +18,17 @@ import checkAuthenticated from "../service/checkAuthentication";
 import type { MenuProps } from "antd";
 import { setCartID } from "../redux/cart/actions";
 import { RootState } from "../redux/store";
+import { setAuthentication } from "../redux/auth/actions";
+import { setLoading } from "../redux/loading/actions";
+import Loading from "./Loading";
 
 export const HeaderSection: React.FC<Props> = ({
   cartId,
   setCartID,
   addCardSuccess,
+  removeCardSuccess,
+  setAuthentication,
+  setLoading,
 }) => {
   const [dataUser, setDataUser] = useState<any>();
   const navigate = useNavigate();
@@ -31,17 +37,19 @@ export const HeaderSection: React.FC<Props> = ({
     const fetchData = async () => {
       const decodedJwt = await decodeJwt();
       try {
+        setLoading(true);
         const response = await axiosConfig.get(
           `${process.env.REACT_APP_API_URL}user/${decodedJwt?.id}`
         );
         setDataUser(response);
         setCartID({ cardId: response?.data?.Cart.id });
         setQuantityCart((response?.data?.Cart.cartDetail).length);
+        setAuthentication(true);
       } catch (error) {
-        console.log(error);
+        setAuthentication(false);
         handleError(error);
       } finally {
-        //   hideLoading();
+        setLoading(false);
       }
     };
     const authenticated = checkAuthenticated();
@@ -58,7 +66,6 @@ export const HeaderSection: React.FC<Props> = ({
           const response = await axiosConfig.get(
             `${process.env.REACT_APP_API_URL}cart-detail/${cartId}`
           );
-          console.log(response?.data);
           setQuantityCart((response?.data).length);
         } catch (error) {
           handleError(error);
@@ -66,7 +73,7 @@ export const HeaderSection: React.FC<Props> = ({
       }
     };
     fetchData();
-  }, [addCardSuccess]);
+  }, [addCardSuccess, removeCardSuccess]);
   const handleClick = async () => {
     await localStorage.removeItem("jwt_token");
     window.location.reload();
@@ -98,7 +105,8 @@ export const HeaderSection: React.FC<Props> = ({
     },
   ];
   return (
-    <div className="flex fixed z-10 h-[56px] w-full justify-between bg-slate-800">
+    <div className="flex fixed z-50 h-[56px] w-full justify-between bg-slate-800">
+      <Loading />
       <img
         src={IMAGES.logoApp}
         alt="logo"
@@ -234,10 +242,11 @@ type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps;
 const mapStateToProps = (state: RootState) => {
   return {
     addCardSuccess: state.cartReducer.addCardSuccess,
+    removeCardSuccess: state.cartReducer.removeCardSuccess,
     cartId: state.cartReducer.cartId,
   };
 };
 
-const mapDispatchToProps = { setCartID };
+const mapDispatchToProps = { setCartID, setAuthentication, setLoading };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderSection);

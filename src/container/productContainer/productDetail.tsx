@@ -7,7 +7,6 @@ import { BiMinus } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
 import "./index.css";
 import { AiOutlineHeart } from "react-icons/ai";
-import { checkAuthentication } from "../../service";
 import { IMAGES } from "../../assets";
 import { RootState } from "../../redux/store";
 import { addCartRequest } from "../../redux/cart/actions";
@@ -16,6 +15,7 @@ const ProductDetail: React.FC<Props> = ({
   loading,
   cartId,
   addCartRequest,
+  isAuthenticated,
 }) => {
   const [dataProduct, setDataProduct] = useState<any>();
   const [quantityOrder, setQuantityOrder] = useState<any>(1);
@@ -52,8 +52,7 @@ const ProductDetail: React.FC<Props> = ({
   };
 
   const handleAddtoCart = () => {
-    const checkAuth = checkAuthentication();
-    if (checkAuth) {
+    if (isAuthenticated) {
       addCartRequest({
         cartId: cartId,
         productId: dataProduct?.data.id,
@@ -153,7 +152,7 @@ const ProductDetail: React.FC<Props> = ({
 
               <InputNumber
                 className="w-1/3 min-w-[80px] max-w-[120px] text-center"
-                placeholder="Age (Max Age :100,  Min Age:1)"
+                placeholder="Quantity"
                 size={"large"}
                 min={1}
                 max={dataProduct?.data?.quantity}
@@ -213,6 +212,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     cartId: state.cartReducer.cartId,
     loading: state.cartReducer.loading,
+    isAuthenticated: state.authReducer.isAuthenticated,
   };
 };
 

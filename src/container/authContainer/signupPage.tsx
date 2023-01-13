@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { RootState } from "../../redux/store";
 import { signupRequest } from "../../redux/auth/actions";
 import { useEffect } from "react";
-import { checkAuthentication } from "../../service";
 import { Footer } from "../../components";
 
 type SignUpType = {
@@ -22,8 +21,7 @@ const SignupPage: React.FC<Props> = ({
 }) => {
   const navigate = useNavigate();
   useEffect(() => {
-    const checkAuth = checkAuthentication();
-    if (checkAuth) {
+    if (isAuthenticated) {
       navigate("/");
       return;
     }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { XyzTransition } from "@animxyz/react";
 import { CardItem, CarouselComponet } from "../../components";
@@ -8,72 +8,43 @@ import { useNavigate } from "react-router-dom";
 import { Zoom } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import "./index.css";
+import axios from "axios";
+import { handleError } from "../../service";
+import { setLoading } from "../../redux/loading/actions";
 
-const HomePage: React.FC = (props) => {
+const HomePage: React.FC<Props> = ({ setLoading }) => {
   const styleBackgroundImage: React.CSSProperties = {
     backgroundImage: `url(${IMAGES.backgroundImageProduct})`,
   };
   const navigate = useNavigate();
+  const [newestProducts, setNewestProducts] = useState([]);
+  const [saleProducts, setSaleProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const newest = await axios.get(
+          `${process.env.REACT_APP_API_URL}products/newest`
+        );
+        const sale = await axios.get(
+          `${process.env.REACT_APP_API_URL}products/sale`
+        );
+        setNewestProducts(newest?.data);
+        setSaleProducts(sale?.data);
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   const imagSliderCollection = [
     "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
     "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
     "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-  ];
-  const dataTest = [
-    {
-      id: 21,
-      name: "Sanpham1",
-      descriptions: "Description",
-      quantity: 12,
-      price: 120000,
-      salePrice: 100000,
-      color: "black",
-      material: "iron",
-      design: "circle",
-      type: "glasses",
-      brand: "anna health",
-      mainImg:
-        "http://localhost:5000/mainImages/0e7ed8d128b3fc50adc602e89eda2dcb.jpg-1672326859551-47396869.jpg",
-      createdAt: "2022-12-29T15:14:19.609Z",
-      updatedAt: "2022-12-29T15:14:19.609Z",
-      subImg: [],
-    },
-    {
-      id: 22,
-      name: "Sanpham2",
-      descriptions: "Description",
-      quantity: 3,
-      price: 120000,
-      salePrice: 120000,
-      color: "black",
-      material: "iron",
-      design: "circle",
-      type: "glasses",
-      brand: "anna health",
-      mainImg:
-        "http://localhost:5000/mainImages/0e7ed8d128b3fc50adc602e89eda2dcb.jpg-1672326901544-114842951.jpg",
-      createdAt: "2022-12-29T15:15:01.549Z",
-      updatedAt: "2022-12-29T15:15:01.549Z",
-      subImg: [],
-    },
-    {
-      id: 23,
-      name: "Sanpham3",
-      descriptions: "Description",
-      quantity: 0,
-      price: 120000,
-      salePrice: 120000,
-      color: "black",
-      material: "iron",
-      design: "circle",
-      type: "glasses",
-      brand: "anna health",
-      mainImg:
-        "http://localhost:5000/mainImages/0e7ed8d128b3fc50adc602e89eda2dcb.jpg-1672326911275-765596965.jpg",
-      createdAt: "2022-12-29T15:15:11.289Z",
-      updatedAt: "2022-12-29T15:15:11.289Z",
-      subImg: [],
-    },
   ];
   return (
     <XyzTransition
@@ -101,13 +72,13 @@ const HomePage: React.FC = (props) => {
         </div>
         <div className="flex flex-col w-full rounded-sm mt-5">
           <div className="bg-slate-600 w-full rounded-t-lg p-2 pl-5 text-white">
-            <p className="text-lg font-bold">Flash sale today</p>
+            <p className="text-lg font-bold">Flash sale</p>
             <p className="text-sm font-light	">
               Hundreds of products catching the latest trends
             </p>
           </div>
           <div className="flex flex-row bg-slate-400 w-full rounded-b-lg p-2 overflow-x-auto scrollbar-hide">
-            {dataTest.map((element, index) => {
+            {saleProducts.map((element, index) => {
               return <CardItem data={element} key={index} />;
             })}
           </div>
@@ -119,7 +90,7 @@ const HomePage: React.FC = (props) => {
             style={styleBackgroundImage}
           >
             <div className="mt-[50px] border-b-2 w-1/2">
-              <p className="font-light">HOT TREND</p>
+              <p className="font-light">NEWEST</p>
               <p className="font-bold text-sm sm:text-lg ">
                 NEW PRODUCTS FOR YOU
               </p>
@@ -132,7 +103,7 @@ const HomePage: React.FC = (props) => {
               gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
             }}
           >
-            {dataTest.map((element, index) => {
+            {newestProducts.map((element, index) => {
               return <CardItem data={element} key={index} />;
             })}
           </div>
@@ -241,8 +212,9 @@ const HomePage: React.FC = (props) => {
   );
 };
 
+type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps;
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { setLoading };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

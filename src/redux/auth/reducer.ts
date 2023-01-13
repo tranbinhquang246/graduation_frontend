@@ -39,6 +39,6 @@ export const authReducer = createReducer(initialState, (builder) => {
       state.isAuthenticated = false;
     })
     .addCase(setAuthentication, (state, action) => {
-      state.isAuthenticated = true;
+      state.isAuthenticated = action.payload;
     });
 });

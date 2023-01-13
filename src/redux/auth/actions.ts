@@ -9,4 +9,4 @@ export const signupRequest = createAction<SignupPayload>("SIGNUP_REQUEST");
 export const signupSuccess = createAction<any>("SIGNUP_SUCCESS");
 export const signupFailure = createAction<any>("SIGNUP_FAILURE");
 
-export const setAuthentication = createAction<any>("SET_AUTHENTICATION");
+export const setAuthentication = createAction<boolean>("SET_AUTHENTICATION");

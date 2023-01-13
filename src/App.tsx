@@ -13,6 +13,7 @@ import {
 } from "./container/HomeContainer";
 import BlogPage from "./container/HomeContainer/blogPage";
 import { ProductDetail } from "./container/productContainer";
+import { CartPage } from "./container/cartContainer";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/about-me" element={<ABoutMePage />} />
           <Route path="/tracking" element={<TrackOrderPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/cart" element={<CartPage />} />
         </Route>
       </Routes>
       <ToastContainer />

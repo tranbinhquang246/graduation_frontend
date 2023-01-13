@@ -9,6 +9,7 @@ import TPHCM from "./tpHCM.jpg";
 import backgroundProduct from "./backgroundProduct.jpg";
 import noProductFound from "./noProduct.png";
 import userImage from "./user.png";
+import emptyCart from "./emptycart.png";
 export const IMAGES = {
   loginImage,
   logoApp,
@@ -21,4 +22,5 @@ export const IMAGES = {
   backgroundProduct,
   noProductFound,
   userImage,
+  emptyCart,
 };
