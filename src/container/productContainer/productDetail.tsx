@@ -6,10 +6,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BiMinus } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
 import "./index.css";
-import { AiOutlineHeart } from "react-icons/ai";
 import { IMAGES } from "../../assets";
 import { RootState } from "../../redux/store";
 import { addCartRequest } from "../../redux/cart/actions";
+import Favorite from "./Favorite";
+import EvaluationProduct from "./EvaluationProduct";
+import SlideShow from "./SlideShow";
 
 const ProductDetail: React.FC<Props> = ({
   loading,
@@ -28,7 +30,6 @@ const ProductDetail: React.FC<Props> = ({
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}products/${idProduct}`
         );
-        console.log(response);
         setDataProduct(response);
       } catch (error) {
         console.log(error);
@@ -47,6 +48,7 @@ const ProductDetail: React.FC<Props> = ({
     };
     fetchData();
   }, [location]);
+  console.log(dataProduct);
   const onChange = (value: any) => {
     setQuantityOrder(value);
   };
@@ -65,11 +67,13 @@ const ProductDetail: React.FC<Props> = ({
   if (dataProduct?.data) {
     return (
       <div className="flex flex-col h-full w-full">
-        <div className="flex flex-col sm:flex-row w-full mt-[56px]">
-          <div className="w-full sm:w-1/2 min-h-[550px] bg-slate-300">
-            Slideshow
+        <div className="flex flex-col md:flex-row w-full mt-[56px]">
+          <div className="w-full md:w-1/2 min-h-[550px] justify-center items-center">
+            <SlideShow
+              data={[dataProduct?.data.mainImg, ...dataProduct?.data.subImg]}
+            />
           </div>
-          <div className="flex flex-col justify-start w-full sm:w-1/2 min-h-[550px] p-5">
+          <div className="flex flex-col justify-start w-full md:w-1/2 min-h-[550px] p-5">
             <p className="font-bold text-xl mb-1 mt-2">
               {dataProduct?.data?.name}
             </p>
@@ -84,7 +88,10 @@ const ProductDetail: React.FC<Props> = ({
               "vi-VN"
             )} đ`}</p>
 
-            <AiOutlineHeart />
+            <Favorite
+              productId={dataProduct?.data?.id}
+              isAuthenticated={isAuthenticated}
+            />
             <p className="mt-5 font-normal text-base">Product Detail</p>
             <div className="flex flex-col w-full p-2">
               <div className="flex w-full border-b-2 p-1 mb-1">
@@ -197,6 +204,7 @@ const ProductDetail: React.FC<Props> = ({
             </div>
           </div>
         </div>
+        <EvaluationProduct />
       </div>
     );
   }

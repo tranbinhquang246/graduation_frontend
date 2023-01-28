@@ -10,13 +10,20 @@ import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { setLoading } from "../../redux/loading/actions";
 import Loading from "../../components/Loading";
+import type { RadioChangeEvent } from "antd";
+import { Radio } from "antd";
 
 const CartPage: React.FC<Props> = ({
   updateQuantitySuccess,
   removeCardSuccess,
   setLoading,
+  dataDeliveryAddress,
 }) => {
   const navigate = useNavigate();
+  const [paymentMethod, setPaymentMethod] = useState("cashondelivery");
+  const [deliveryAddress, setDeliveryAddress] = useState(
+    dataDeliveryAddress[0]
+  );
   const [dataCart, setDataCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [totalSalePrice, setTotalSalePrice] = useState<number>(0);
@@ -60,6 +67,15 @@ const CartPage: React.FC<Props> = ({
     setTotalDiscountPrice(provisionalCalcPrice - provisionalCalcSalePrice);
     setTotalAmountPorduct(amoutProducts);
   }, [dataCart]);
+
+  const onChangePaymentMethods = (e: RadioChangeEvent) => {
+    console.log("radio checked", e.target.value);
+    setPaymentMethod(e.target.value);
+  };
+
+  const onpenModalChangeDeliAdd = () => {
+    console.log(deliveryAddress);
+  };
 
   return (
     <div className="w-full flex flex-col mt-[56px]">
@@ -106,6 +122,67 @@ const CartPage: React.FC<Props> = ({
                 "vi-VN"
               )} đ`}</p>
             </div>
+            <div className="flex justify-center bg-slate-100 text-sm font-medium p-4 border-b-[1px] border-slate-300">
+              Delivery address
+            </div>
+            <div className="flex justify-between  text-sm font-normal px-2 py-4 border-b-[1px] border-slate-300">
+              <p>{deliveryAddress}</p>
+              <p
+                onClick={onpenModalChangeDeliAdd}
+                className="text-blue-600 hover:cursor-pointer hover:font-medium"
+              >
+                Change
+              </p>
+            </div>
+            <div className="flex justify-center bg-slate-100 text-sm font-medium p-4 border-b-[1px] border-slate-300">
+              Payment methods
+            </div>
+            <div className="flex flex-col text-sm font-normal px-2 py-4 border-b-[1px] border-slate-300">
+              <Radio.Group
+                onChange={onChangePaymentMethods}
+                value={paymentMethod}
+                className="flex flex-col"
+              >
+                <Radio
+                  value="cashondelivery"
+                  className="p-2 text-sm font-normal font-ubuntu"
+                >
+                  Cash On Delivery
+                </Radio>
+                <Radio
+                  value="onlinepayment"
+                  className="p-2 text-sm font-normal font-ubuntu"
+                >
+                  Online Payment
+                </Radio>
+              </Radio.Group>
+              {paymentMethod === "onlinepayment" && (
+                <div className="flex flex-col items-left text-sm font-normal px-2 border-slate-300">
+                  <div className="flex w-full justify-center">
+                    <img
+                      src={IMAGES.mastercardPay}
+                      alt="mastercard"
+                      className="p-1 w-[68px] h-[45px] hover:cursor-pointer hover:scale-110 transition duration-300 ease-in-out"
+                    ></img>
+                    <img
+                      src={IMAGES.visaPay}
+                      alt="mastercard"
+                      className="p-1 w-[68px] h-[45px] hover:cursor-pointer hover:scale-110 transition duration-300 ease-in-out"
+                    ></img>
+                    <img
+                      src={IMAGES.discoverPay}
+                      alt="mastercard"
+                      className="p-1 w-[68px] h-[45px] hover:cursor-pointer hover:scale-110 transition duration-300 ease-in-out"
+                    ></img>
+                  </div>
+                </div>
+              )}
+
+              <p className="p-2 font-light">
+                Your personal information will be used for order processing and
+                for other specific purposes described in our privacy policy .
+              </p>
+            </div>
             <div className="flex justify-center  px-2 py-4 border-slate-300">
               <Button className="w-[120px] h-[50px] font-medium text-base text-white border-2 border-blue-800 bg-blue-800 hover:bg-white hover:text-blue-800">
                 Payment
@@ -141,6 +218,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     updateQuantitySuccess: state.cartReducer.updateQuantity,
     removeCardSuccess: state.cartReducer.removeCardSuccess,
+    dataDeliveryAddress: state.userInforReducer.deliveryAddress,
   };
 };
 

@@ -10,6 +10,9 @@ import backgroundProduct from "./backgroundProduct.jpg";
 import noProductFound from "./noProduct.png";
 import userImage from "./user.png";
 import emptyCart from "./emptycart.png";
+import visaPay from "./visapay.jpg";
+import mastercardPay from "./mastercardpay.jpg";
+import discoverPay from "./discoverpay.jpg";
 export const IMAGES = {
   loginImage,
   logoApp,
@@ -23,4 +26,7 @@ export const IMAGES = {
   noProductFound,
   userImage,
   emptyCart,
+  visaPay,
+  mastercardPay,
+  discoverPay,
 };

@@ -13,7 +13,12 @@ import { MdLocationPin } from "react-icons/md";
 import { FaBloggerB } from "react-icons/fa";
 import { decodeJwt, handleError } from "../service";
 import axiosConfig from "../axiosInterceptor/AxioConfig";
-import { UserOutlined, EditOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  EditOutlined,
+  LogoutOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
 import checkAuthenticated from "../service/checkAuthentication";
 import type { MenuProps } from "antd";
 import { setCartID } from "../redux/cart/actions";
@@ -21,6 +26,7 @@ import { RootState } from "../redux/store";
 import { setAuthentication } from "../redux/auth/actions";
 import { setLoading } from "../redux/loading/actions";
 import Loading from "./Loading";
+import { setDeliveryAddress, setUserInfor } from "../redux/user-infor/action";
 
 export const HeaderSection: React.FC<Props> = ({
   cartId,
@@ -29,6 +35,8 @@ export const HeaderSection: React.FC<Props> = ({
   removeCardSuccess,
   setAuthentication,
   setLoading,
+  setDeliveryAddress,
+  setUserInfor,
 }) => {
   const [dataUser, setDataUser] = useState<any>();
   const navigate = useNavigate();
@@ -45,6 +53,10 @@ export const HeaderSection: React.FC<Props> = ({
         setCartID({ cardId: response?.data?.Cart.id });
         setQuantityCart((response?.data?.Cart.cartDetail).length);
         setAuthentication(true);
+        setDeliveryAddress({
+          deliveryAddress: response?.data?.addressDeliverys,
+        });
+        setUserInfor({ userInfor: response?.data?.userInfor });
       } catch (error) {
         setAuthentication(false);
         handleError(error);
@@ -75,7 +87,7 @@ export const HeaderSection: React.FC<Props> = ({
     fetchData();
   }, [addCardSuccess, removeCardSuccess]);
   const handleClick = async () => {
-    await localStorage.removeItem("jwt_token");
+    localStorage.removeItem("jwt_token");
     window.location.reload();
   };
   const items: MenuProps["items"] = [
@@ -86,7 +98,7 @@ export const HeaderSection: React.FC<Props> = ({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => {
-            navigate("/edit");
+            navigate("/account");
           }}
         >
           Edit Account
@@ -214,7 +226,11 @@ export const HeaderSection: React.FC<Props> = ({
           </Badge>
           <Dropdown menu={{ items }}>
             {dataUser?.data?.userInfor.avatar ? (
-              <Avatar shape="square" size="large" />
+              <Avatar
+                shape="square"
+                size="large"
+                src={dataUser.data.userInfor.avatar}
+              />
             ) : (
               <Avatar shape="square" size="large" src={IMAGES.userImage} />
             )}
@@ -247,6 +263,12 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = { setCartID, setAuthentication, setLoading };
+const mapDispatchToProps = {
+  setCartID,
+  setAuthentication,
+  setLoading,
+  setDeliveryAddress,
+  setUserInfor,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderSection);
