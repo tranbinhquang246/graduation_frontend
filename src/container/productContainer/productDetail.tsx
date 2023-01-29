@@ -12,12 +12,15 @@ import { addCartRequest } from "../../redux/cart/actions";
 import Favorite from "./Favorite";
 import EvaluationProduct from "./EvaluationProduct";
 import SlideShow from "./SlideShow";
+import { setLoading } from "../../redux/loading/actions";
+import { toast } from "react-toastify";
 
 const ProductDetail: React.FC<Props> = ({
   loading,
   cartId,
   addCartRequest,
   isAuthenticated,
+  setLoading,
 }) => {
   const [dataProduct, setDataProduct] = useState<any>();
   const [quantityOrder, setQuantityOrder] = useState<any>(1);
@@ -27,28 +30,28 @@ const ProductDetail: React.FC<Props> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}products/${idProduct}`
         );
         setDataProduct(response);
       } catch (error) {
-        console.log(error);
-        //   toast.error("Không thể lấy thông tin sản phẩm", {
-        //     position: "bottom-right",
-        //     autoClose: 1500,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: true,
-        //     draggable: true,
-        //     progress: undefined,
-        //   });
+        setLoading(false);
+        toast.error("Something went wrong", {
+          position: "bottom-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } finally {
-        //   hideLoading();
+        setLoading(false);
       }
     };
     fetchData();
   }, [location]);
-  console.log(dataProduct);
   const onChange = (value: any) => {
     setQuantityOrder(value);
   };
@@ -204,7 +207,10 @@ const ProductDetail: React.FC<Props> = ({
             </div>
           </div>
         </div>
-        <EvaluationProduct />
+        <EvaluationProduct
+          productId={idProduct}
+          isAuthenticated={isAuthenticated}
+        />
       </div>
     );
   }
@@ -224,6 +230,6 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = { addCartRequest };
+const mapDispatchToProps = { addCartRequest, setLoading };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);

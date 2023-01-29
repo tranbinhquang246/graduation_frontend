@@ -1,6 +1,9 @@
 export type SetDeliveryAddressPayload = {
   deliveryAddress: [];
 };
+export type SetFavoritePayload = {
+  favorite: [];
+};
 export type SetUserInforPayload = {
   userInfor: {
     avatar: string;
