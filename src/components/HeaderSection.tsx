@@ -13,7 +13,12 @@ import { MdLocationPin } from "react-icons/md";
 import { FaBloggerB } from "react-icons/fa";
 import { decodeJwt, handleError } from "../service";
 import axiosConfig from "../axiosInterceptor/AxioConfig";
-import { UserOutlined, EditOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  EditOutlined,
+  LogoutOutlined,
+  GoldOutlined,
+} from "@ant-design/icons";
 import checkAuthenticated from "../service/checkAuthentication";
 import type { MenuProps } from "antd";
 import { setCartID } from "../redux/cart/actions";
@@ -119,32 +124,79 @@ export const HeaderSection: React.FC<Props> = ({
     localStorage.removeItem("jwt_token");
     window.location.reload();
   };
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => {
-            navigate("/account");
-          }}
-        >
-          Edit Account
-        </a>
-      ),
-      icon: <EditOutlined />,
-    },
-    {
-      key: "2",
-      label: (
-        <a target="_blank" rel="noopener noreferrer" onClick={handleClick}>
-          Sign Out
-        </a>
-      ),
-      icon: <LogoutOutlined />,
-    },
-  ];
+
+  const items: MenuProps["items"] = [];
+  if (dataUser?.data.userRole === "admin") {
+    items.push(
+      {
+        key: "1",
+        label: (
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              navigate("/account");
+            }}
+          >
+            Edit Account
+          </a>
+        ),
+        icon: <EditOutlined />,
+      },
+      {
+        key: "2",
+        label: (
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              navigate("/admin");
+            }}
+          >
+            Manager
+          </a>
+        ),
+        icon: <GoldOutlined />,
+      },
+      {
+        key: "3",
+        label: (
+          <a target="_blank" rel="noopener noreferrer" onClick={handleClick}>
+            Sign Out
+          </a>
+        ),
+        icon: <LogoutOutlined />,
+      }
+    );
+  } else {
+    items.push(
+      {
+        key: "1",
+        label: (
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              navigate("/account");
+            }}
+          >
+            Edit Account
+          </a>
+        ),
+        icon: <EditOutlined />,
+      },
+      {
+        key: "2",
+        label: (
+          <a target="_blank" rel="noopener noreferrer" onClick={handleClick}>
+            Sign Out
+          </a>
+        ),
+        icon: <LogoutOutlined />,
+      }
+    );
+  }
+
   return (
     <div className="flex fixed z-50 h-[56px] w-full justify-between bg-slate-800">
       <Loading />

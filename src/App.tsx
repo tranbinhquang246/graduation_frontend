@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LoginPage, SignUpPage } from "./container/authContainer";
 import ProductsMainLayout from "./layout/MainLayout";
 import { ToastContainer } from "react-toastify";
@@ -21,6 +21,16 @@ import {
   Favorite,
   Ordered,
 } from "./container/accountContainer";
+import AdminLayout from "./layout/AdminLayout";
+import {
+  BannerManagerPage,
+  CollectionUsersManagerPage,
+  LockupDataManagerPage,
+  OrdersManagerPage,
+  ProductsManagerPage,
+  UserManagerPage,
+} from "./container/AdminContainer";
+import ErrorLayout from "./layout/ErrorLayout";
 
 function App() {
   return (
@@ -43,6 +53,18 @@ function App() {
             <Route path="favorite" element={<Favorite />} />
           </Route>
         </Route>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<UserManagerPage />} />
+          <Route path="products" element={<ProductsManagerPage />} />
+          <Route path="orders" element={<OrdersManagerPage />} />
+          <Route path="lookup-data" element={<LockupDataManagerPage />} />
+          <Route
+            path="collection-users"
+            element={<CollectionUsersManagerPage />}
+          />
+          <Route path="banner" element={<BannerManagerPage />} />
+        </Route>
+        <Route path="*" element={<ErrorLayout />} />
       </Routes>
       <ToastContainer />
     </BrowserRouter>
