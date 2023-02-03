@@ -2,8 +2,8 @@ import { createReducer } from "@reduxjs/toolkit";
 import {
   setDeliveryAddress,
   setFavorite,
-  setOpenModalAddAddress,
   setUserInfor,
+  setUserInforSuccess,
 } from "./action";
 
 const initialState = {
@@ -11,6 +11,7 @@ const initialState = {
   favorite: [],
   userInfor: { avatar: "", firstName: "", lastName: "", userId: "" },
   isOpenModalAddAddress: false,
+  isSetUserInforSuccess: true,
 };
 export const userInforReducer = createReducer(initialState, (builder) => {
   builder
@@ -23,7 +24,7 @@ export const userInforReducer = createReducer(initialState, (builder) => {
     .addCase(setUserInfor, (state, action) => {
       state.userInfor = action.payload.userInfor;
     })
-    .addCase(setOpenModalAddAddress, (state, action) => {
-      state.isOpenModalAddAddress = action.payload;
+    .addCase(setUserInforSuccess, (state, action) => {
+      state.isSetUserInforSuccess = action.payload;
     });
 });

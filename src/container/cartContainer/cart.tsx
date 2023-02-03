@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -12,23 +13,32 @@ import { setLoading } from "../../redux/loading/actions";
 import Loading from "../../components/Loading";
 import type { RadioChangeEvent } from "antd";
 import { Radio } from "antd";
+import { ModalChangeDeliveryAddress } from "../modalContainer";
+import { addOrderRequest, resetOrderState } from "../../redux/order/actions";
 
 const CartPage: React.FC<Props> = ({
   updateQuantitySuccess,
   removeCardSuccess,
   setLoading,
   dataDeliveryAddress,
+  cartId,
+  addOrderRequest,
+  addOrderSuccess,
+  resetOrderState,
 }) => {
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
+  const [indexRadioChoose, setIndexRadioChoose] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("cashondelivery");
-  const [deliveryAddress, setDeliveryAddress] = useState(
-    dataDeliveryAddress[0]
-  );
+  const [deliveryAddress, setDeliveryAddress] = useState<any>();
   const [dataCart, setDataCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [totalSalePrice, setTotalSalePrice] = useState<number>(0);
   const [totalDiscountPrice, setTotalDiscountPrice] = useState<number>(0);
   const [totalAmountPorduct, setTotalAmountPorduct] = useState<number>(0);
+  useEffect(() => {
+    setDeliveryAddress(dataDeliveryAddress[indexRadioChoose]);
+  }, [dataDeliveryAddress]);
   useEffect(() => {
     const fetchData = async () => {
       const decodedJwt = await decodeJwt();
@@ -51,6 +61,32 @@ const CartPage: React.FC<Props> = ({
       return;
     }
   }, [updateQuantitySuccess, removeCardSuccess]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const decodedJwt = await decodeJwt();
+      try {
+        setLoading(true);
+        await axiosConfig
+          .get(`${process.env.REACT_APP_API_URL}cart/${decodedJwt?.id}`)
+          .then((response) => {
+            setDataCart(response?.data[0]?.cartDetail);
+          });
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setLoading(false);
+        resetOrderState();
+        navigate("/account/ordered");
+      }
+    };
+
+    if (addOrderSuccess) {
+      fetchData();
+      return;
+    }
+  }, [addOrderSuccess]);
+
   useEffect(() => {
     let provisionalCalcPrice = 0;
     let provisionalCalcSalePrice = 0;
@@ -69,14 +105,30 @@ const CartPage: React.FC<Props> = ({
   }, [dataCart]);
 
   const onChangePaymentMethods = (e: RadioChangeEvent) => {
-    console.log("radio checked", e.target.value);
     setPaymentMethod(e.target.value);
   };
-
-  const onpenModalChangeDeliAdd = () => {
-    console.log(deliveryAddress);
+  const onOk = async () => {
+    setDeliveryAddress(dataDeliveryAddress[indexRadioChoose]);
+    setOpenModal(false);
   };
+  const handleOrder = () => {
+    const productUpload: object[] = [];
+    dataCart.forEach((element: any) => {
+      productUpload.push({
+        productId: element?.productId,
+        quantity: element?.quantity,
+        price: element?.product.price,
+      });
+    });
 
+    const dataUpload = {
+      cartId: cartId,
+      totalOrder: totalSalePrice,
+      deliveryAddress: `${deliveryAddress?.address}, ${deliveryAddress?.commune}, ${deliveryAddress?.district}, ${deliveryAddress?.province}`,
+      products: productUpload,
+    };
+    addOrderRequest(dataUpload);
+  };
   return (
     <div className="w-full flex flex-col mt-[56px]">
       <Loading />
@@ -125,10 +177,12 @@ const CartPage: React.FC<Props> = ({
             <div className="flex justify-center bg-slate-100 text-sm font-medium p-4 border-b-[1px] border-slate-300">
               Delivery address
             </div>
-            <div className="flex justify-between  text-sm font-normal px-2 py-4 border-b-[1px] border-slate-300">
-              <p>{deliveryAddress}</p>
+            <div className="flex justify-between text-sm font-normal px-2 py-4 border-b-[1px] border-slate-300">
+              <p className="mr-10">{`${deliveryAddress?.address}, ${deliveryAddress?.commune}, ${deliveryAddress?.district}, ${deliveryAddress?.province}`}</p>
               <p
-                onClick={onpenModalChangeDeliAdd}
+                onClick={() => {
+                  setOpenModal(true);
+                }}
                 className="text-blue-600 hover:cursor-pointer hover:font-medium"
               >
                 Change
@@ -184,7 +238,10 @@ const CartPage: React.FC<Props> = ({
               </p>
             </div>
             <div className="flex justify-center  px-2 py-4 border-slate-300">
-              <Button className="w-[120px] h-[50px] font-medium text-base text-white border-2 border-blue-800 bg-blue-800 hover:bg-white hover:text-blue-800">
+              <Button
+                className="w-[120px] h-[50px] font-medium text-base text-white border-2 border-blue-800 bg-blue-800 hover:bg-white hover:text-blue-800"
+                onClick={handleOrder}
+              >
                 Payment
               </Button>
             </div>
@@ -210,6 +267,16 @@ const CartPage: React.FC<Props> = ({
       >
         Recommend
       </div>
+      <ModalChangeDeliveryAddress
+        open={openModal}
+        onOk={onOk}
+        onCancel={() => {
+          setOpenModal(false);
+        }}
+        data={dataDeliveryAddress}
+        setIndexRadioChoose={setIndexRadioChoose}
+        indexRadioChoose={indexRadioChoose}
+      />
     </div>
   );
 };
@@ -219,9 +286,11 @@ const mapStateToProps = (state: RootState) => {
     updateQuantitySuccess: state.cartReducer.updateQuantity,
     removeCardSuccess: state.cartReducer.removeCardSuccess,
     dataDeliveryAddress: state.userInforReducer.deliveryAddress,
+    cartId: state.cartReducer.cartId,
+    addOrderSuccess: state.orderReducer.addOrderSuccess,
   };
 };
 
-const mapDispatchToProps = { setLoading };
+const mapDispatchToProps = { setLoading, addOrderRequest, resetOrderState };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartPage);

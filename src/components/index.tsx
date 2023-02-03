@@ -8,3 +8,4 @@ export { default as PaginationComponent } from "./PaginationComponent";
 export { default as CardItemCartComponent } from "./CardItemCart";
 export { default as DeliveryCartComponent } from "./DeliveryCart";
 export { default as EvaluationCartComponet } from "./Evaluation";
+export { default as OrderedCardComponent } from "./OrderedCard";

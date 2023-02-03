@@ -13,6 +13,7 @@ import emptyCart from "./emptycart.png";
 import visaPay from "./visapay.jpg";
 import mastercardPay from "./mastercardpay.jpg";
 import discoverPay from "./discoverpay.jpg";
+import delivered from "./delivered.png";
 export const IMAGES = {
   loginImage,
   logoApp,
@@ -29,4 +30,5 @@ export const IMAGES = {
   visaPay,
   mastercardPay,
   discoverPay,
+  delivered,
 };

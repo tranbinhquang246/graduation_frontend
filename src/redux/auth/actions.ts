@@ -11,10 +11,6 @@ export const signupFailure = createAction<any>("SIGNUP_FAILURE");
 
 export const setAuthentication = createAction<boolean>("SET_AUTHENTICATION");
 
-export const setOpenModalDeleteAccount = createAction<boolean>(
-  "SET_OPEN_MODAL_DELETE_ACCOUNT"
-);
-
 export const deleteAccountRequest = createAction("DELETE_ACCOUNT_REQUEST");
 export const deleteAccountSuccess = createAction("DELETE_ACCOUNT_SUCCESS");
 export const deleteAccountFailure = createAction("DELETE_ACCOUNT_FAILURE");

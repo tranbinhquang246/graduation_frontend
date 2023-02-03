@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Avatar } from "antd";
 import { IMAGES } from "../../assets";
-import { decodeJwt } from "../../service";
+import { decodeJwt, handleError } from "../../service";
 import { Outlet, useNavigate } from "react-router-dom";
 import {
   MdOutlineDeliveryDining,
@@ -12,14 +12,13 @@ import {
   MdOutlineFavoriteBorder,
   MdDeleteOutline,
 } from "react-icons/md";
-import { setOpenModalDeleteAccount } from "../../redux/auth/actions";
-import { ModalAddDelivery, ModalDeleteAccount } from "../modalContainer";
+import { ModalDeleteAccount } from "../modalContainer";
+import { setLoading } from "../../redux/loading/actions";
+import axiosConfig from "../../axiosInterceptor/AxioConfig";
+import { toast } from "react-toastify";
 
-const AccountPage: React.FC<Props> = ({
-  userInfor,
-  isAuthenticated,
-  setOpenModalDeleteAccount,
-}) => {
+const AccountPage: React.FC<Props> = ({ userInfor, isAuthenticated }) => {
+  const [openModal, setOpenModal] = useState(false);
   const decodedJwt = decodeJwt();
   const navigate = useNavigate();
   useEffect(() => {
@@ -28,13 +27,36 @@ const AccountPage: React.FC<Props> = ({
     //   return;
     // }
   }, []);
-  const handleDeleteAccount = () => {
-    setOpenModalDeleteAccount(true);
+
+  const onDeleteAccount = async () => {
+    setLoading(true);
+    try {
+      await axiosConfig.delete(
+        `${process.env.REACT_APP_API_URL}user/delete/${userInfor?.userId}`
+      );
+      toast.success("Delete successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setOpenModal(false);
+      localStorage.removeItem("jwt_token");
+      window.location.href = "/";
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="w-full flex flex-col md:flex-row mt-[56px] font-ubuntu p-5">
-      <div className="flex flex-col w-full md:w-1/3 justify-center items-center">
+      <div className="flex flex-col w-full md:w-1/3 items-center">
         {userInfor?.avatar ? (
           <Avatar shape="circle" size={120} src={userInfor.avatar} />
         ) : (
@@ -132,7 +154,9 @@ const AccountPage: React.FC<Props> = ({
         </div>
         <div
           className=" w-1/2 flex text-sm hover:cursor-pointer hover:scale-105 items-center transition duration-300"
-          onClick={handleDeleteAccount}
+          onClick={() => {
+            setOpenModal(true);
+          }}
         >
           <MdDeleteOutline
             style={{
@@ -149,11 +173,16 @@ const AccountPage: React.FC<Props> = ({
           <p className="text-red-400">Deleted Account</p>
         </div>
       </div>
-      <div className="flex flex-col w-full md:w-2/3">
+      <div className="flex flex-col w-full mt-5 md:w-2/3">
         <Outlet />
       </div>
-      <ModalDeleteAccount />
-      <ModalAddDelivery />
+      <ModalDeleteAccount
+        open={openModal}
+        onDelete={onDeleteAccount}
+        onCancel={() => {
+          setOpenModal(false);
+        }}
+      />
     </div>
   );
 };
@@ -166,6 +195,6 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = { setOpenModalDeleteAccount };
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountPage);

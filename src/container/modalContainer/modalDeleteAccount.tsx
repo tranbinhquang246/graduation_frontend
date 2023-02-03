@@ -1,43 +1,47 @@
 import React from "react";
-import { connect } from "react-redux";
-import { RootState } from "../../redux/store";
 import { Modal } from "antd";
-import { setOpenModalDeleteAccount } from "../../redux/auth/actions";
+interface CollectionFormProps {
+  open: boolean;
+  onDelete: () => void;
+  onCancel: () => void;
+}
 
-const modalDeleteAccount: React.FC<Props> = ({
-  isOpenModalDeleteAccount,
-  setOpenModalDeleteAccount,
+export const ModalDeleteAccount: React.FC<CollectionFormProps> = ({
+  open,
+  onDelete,
+  onCancel,
 }) => {
-  const handleOk = () => {
-    setOpenModalDeleteAccount(false);
-  };
-
-  const handleCancel = () => {
-    setOpenModalDeleteAccount(false);
-  };
   return (
-    <Modal
-      title="Delete Account"
-      open={isOpenModalDeleteAccount}
-      onOk={handleOk}
-      onCancel={handleCancel}
-    >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
+    <Modal open={open} footer={false} onCancel={onCancel}>
+      <div className="relative bg-white px-4 pt-6 pb-8 sm:pt-8 sm:pb-4 sm:px-8 sm:py-8">
+        <div className="text-center">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            Delete Account
+          </h3>
+        </div>
+        <div className="mt-4 bg-red-200 p-2">
+          <div className="text-sm leading-5 text-gray-500">
+            Are you sure you want to delete this account? This action cannot be
+            undone.
+          </div>
+        </div>
+        <div className="mt-4 flex items-center justify-end space-x-3">
+          <button
+            className="border-2 px-3 py-2 rounded-md hover:bg-slate-400 hover:text-white"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+          <button
+            className="border-2 bg-red-500 text-white px-3 py-2 rounded-md hover:text-slate-300 hover:bg-red-600"
+            onClick={onDelete}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
     </Modal>
   );
 };
 
-type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps;
-const mapStateToProps = (state: RootState) => {
-  return {
-    isOpenModalDeleteAccount: state.authReducer.isOpenModalDeleteAccount,
-  };
-};
-
-const mapDispatchToProps = {
-  setOpenModalDeleteAccount,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(modalDeleteAccount);
+export default ModalDeleteAccount;

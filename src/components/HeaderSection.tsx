@@ -13,12 +13,7 @@ import { MdLocationPin } from "react-icons/md";
 import { FaBloggerB } from "react-icons/fa";
 import { decodeJwt, handleError } from "../service";
 import axiosConfig from "../axiosInterceptor/AxioConfig";
-import {
-  UserOutlined,
-  EditOutlined,
-  LogoutOutlined,
-  UnorderedListOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, EditOutlined, LogoutOutlined } from "@ant-design/icons";
 import checkAuthenticated from "../service/checkAuthentication";
 import type { MenuProps } from "antd";
 import { setCartID } from "../redux/cart/actions";
@@ -26,7 +21,12 @@ import { RootState } from "../redux/store";
 import { setAuthentication } from "../redux/auth/actions";
 import { setLoading } from "../redux/loading/actions";
 import Loading from "./Loading";
-import { setDeliveryAddress, setUserInfor } from "../redux/user-infor/action";
+import {
+  setDeliveryAddress,
+  setFavorite,
+  setUserInfor,
+  setUserInforSuccess,
+} from "../redux/user-infor/action";
 
 export const HeaderSection: React.FC<Props> = ({
   cartId,
@@ -35,8 +35,13 @@ export const HeaderSection: React.FC<Props> = ({
   removeCardSuccess,
   setAuthentication,
   setLoading,
-  setDeliveryAddress,
   setUserInfor,
+  userInfor,
+  isSetUserInforSuccess,
+  setDeliveryAddress,
+  setFavorite,
+  setUserInforSuccess,
+  addOrderSuccess,
 }) => {
   const [dataUser, setDataUser] = useState<any>();
   const navigate = useNavigate();
@@ -52,25 +57,48 @@ export const HeaderSection: React.FC<Props> = ({
         setDataUser(response);
         setCartID({ cardId: response?.data?.Cart.id });
         setQuantityCart((response?.data?.Cart.cartDetail).length);
-        setAuthentication(true);
         setDeliveryAddress({
-          deliveryAddress: response?.data?.addressDeliverys,
+          deliveryAddress: response?.data.addressDeliverys,
         });
-        setUserInfor({ userInfor: response?.data?.userInfor });
+        setFavorite({ favorite: response?.data.favorite });
+        setAuthentication(true);
       } catch (error) {
         setAuthentication(false);
-        handleError(error);
+        setDataUser(null);
+        setCartID({ cardId: 0 });
+        setQuantityCart(0);
       } finally {
         setLoading(false);
+        return;
       }
     };
     const authenticated = checkAuthenticated();
-    if (authenticated) {
+    if (authenticated || addOrderSuccess) {
       fetchData();
       return;
     }
-  }, []);
-
+  }, [addOrderSuccess]);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isSetUserInforSuccess) {
+        const decodedJwt = await decodeJwt();
+        try {
+          setLoading(true);
+          const response = await axiosConfig.get(
+            `${process.env.REACT_APP_API_URL}user-infor/${decodedJwt?.id}`
+          );
+          setUserInfor({ userInfor: response?.data });
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+          setUserInforSuccess(false);
+        }
+        return;
+      }
+    };
+    fetchData();
+  }, [isSetUserInforSuccess]);
   useEffect(() => {
     const fetchData = async () => {
       if (cartId) {
@@ -86,6 +114,7 @@ export const HeaderSection: React.FC<Props> = ({
     };
     fetchData();
   }, [addCardSuccess, removeCardSuccess]);
+
   const handleClick = async () => {
     localStorage.removeItem("jwt_token");
     window.location.reload();
@@ -225,12 +254,8 @@ export const HeaderSection: React.FC<Props> = ({
             />
           </Badge>
           <Dropdown menu={{ items }}>
-            {dataUser?.data?.userInfor.avatar ? (
-              <Avatar
-                shape="square"
-                size="large"
-                src={dataUser.data.userInfor.avatar}
-              />
+            {userInfor?.avatar ? (
+              <Avatar shape="square" size="large" src={userInfor.avatar} />
             ) : (
               <Avatar shape="square" size="large" src={IMAGES.userImage} />
             )}
@@ -260,6 +285,9 @@ const mapStateToProps = (state: RootState) => {
     addCardSuccess: state.cartReducer.addCardSuccess,
     removeCardSuccess: state.cartReducer.removeCardSuccess,
     cartId: state.cartReducer.cartId,
+    userInfor: state.userInforReducer.userInfor,
+    isSetUserInforSuccess: state.userInforReducer.isSetUserInforSuccess,
+    addOrderSuccess: state.orderReducer.addOrderSuccess,
   };
 };
 
@@ -267,8 +295,10 @@ const mapDispatchToProps = {
   setCartID,
   setAuthentication,
   setLoading,
-  setDeliveryAddress,
   setUserInfor,
+  setDeliveryAddress,
+  setFavorite,
+  setUserInforSuccess,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderSection);

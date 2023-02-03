@@ -4,7 +4,7 @@ export default function handleError(error: any) {
   switch (error.response.data.statusCode) {
     case 401:
       localStorage.removeItem("jwt_token");
-      window.location.href = "http://localhost:3000/login";
+      window.location.href = `login`;
       return;
     default:
       toast.error(`${error.response.data.message}`, {

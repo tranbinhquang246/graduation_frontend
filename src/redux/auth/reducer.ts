@@ -7,13 +7,13 @@ import {
   signupSuccess,
   signupFailure,
   setAuthentication,
-  setOpenModalDeleteAccount,
 } from "./actions";
 
 const initialState = {
   loading: false,
   isAuthenticated: false,
   isOpenModalDeleteAccount: false,
+  isDeleteAccountSuccess: true,
 };
 
 export const authReducer = createReducer(initialState, (builder) => {
@@ -42,8 +42,5 @@ export const authReducer = createReducer(initialState, (builder) => {
     })
     .addCase(setAuthentication, (state, action) => {
       state.isAuthenticated = action.payload;
-    })
-    .addCase(setOpenModalDeleteAccount, (state, action) => {
-      state.isOpenModalDeleteAccount = action.payload;
     });
 });

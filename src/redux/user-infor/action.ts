@@ -11,6 +11,6 @@ export const setDeliveryAddress = createAction<SetDeliveryAddressPayload>(
 export const setFavorite = createAction<SetFavoritePayload>("SET_FAVORITE");
 export const setUserInfor = createAction<SetUserInforPayload>("SET_USER_INFOR");
 
-export const setOpenModalAddAddress = createAction<boolean>(
-  "SET_OPEN_MODAL_ADD_ADDRESS"
+export const setUserInforSuccess = createAction<boolean>(
+  "SET_USER_INFOR_SUCCESS"
 );
