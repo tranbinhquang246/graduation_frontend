@@ -31,8 +31,10 @@ import {
   UserManagerPage,
 } from "./container/AdminContainer";
 import ErrorLayout from "./layout/ErrorLayout";
+import { withAuthAdmin } from "./service/withAuthAdminHOC";
 
 function App() {
+  const AdminLayoutWithAuth = withAuthAdmin(AdminLayout);
   return (
     <BrowserRouter>
       <Routes>
@@ -53,7 +55,7 @@ function App() {
             <Route path="favorite" element={<Favorite />} />
           </Route>
         </Route>
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={<AdminLayoutWithAuth />}>
           <Route index element={<UserManagerPage />} />
           <Route path="products" element={<ProductsManagerPage />} />
           <Route path="orders" element={<OrdersManagerPage />} />

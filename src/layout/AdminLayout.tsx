@@ -4,7 +4,10 @@ import { Outlet } from "react-router-dom";
 import { Footer, Header, SideBarAdmin } from "../components";
 
 export const AdminLayout = () => {
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log("ínide effect");
+  }, []);
+  console.log("outside effect");
   return (
     <div className="relative flex flex-col w-full h-full font-ubuntu min-w-[375px]">
       <Header />

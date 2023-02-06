@@ -10,7 +10,6 @@ const initialState = {
   deliveryAddress: [],
   favorite: [],
   userInfor: { avatar: "", firstName: "", lastName: "", userId: "" },
-  isOpenModalAddAddress: false,
   isSetUserInforSuccess: true,
 };
 export const userInforReducer = createReducer(initialState, (builder) => {

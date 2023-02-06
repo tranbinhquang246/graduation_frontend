@@ -12,8 +12,6 @@ import {
 const initialState = {
   loading: false,
   isAuthenticated: false,
-  isOpenModalDeleteAccount: false,
-  isDeleteAccountSuccess: true,
 };
 
 export const authReducer = createReducer(initialState, (builder) => {
