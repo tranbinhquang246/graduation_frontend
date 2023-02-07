@@ -11,13 +11,16 @@ import "./index.css";
 import axios from "axios";
 import { handleError } from "../../service";
 import { setLoading } from "../../redux/loading/actions";
+import { RootState } from "../../redux/store";
+import axiosConfig from "../../axiosInterceptor/AxioConfig";
 
-const HomePage: React.FC<Props> = ({ setLoading }) => {
+const HomePage: React.FC<Props> = ({ setLoading, isAuthenticated }) => {
   const styleBackgroundImage: React.CSSProperties = {
     backgroundImage: `url(${IMAGES.backgroundImageProduct})`,
   };
   const navigate = useNavigate();
   const [newestProducts, setNewestProducts] = useState([]);
+  const [dataProductRecommend, setDataProductRecommend] = useState<any>();
   const [saleProducts, setSaleProducts] = useState([]);
   const [imageSlider, setImageSlider] = useState<any>([]);
   const [handeledimageSlider, setHandledImageSlider] = useState<any>([]);
@@ -55,7 +58,25 @@ const HomePage: React.FC<Props> = ({ setLoading }) => {
       setHandledImageSlider(handleData);
     }
   }, [imageSlider]);
-  console.log(imageSlider);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosConfig.get(
+          `${process.env.REACT_APP_API_URL}products/recommend-favorite`
+        );
+        setDataProductRecommend(response?.data);
+      } catch (error) {
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [isAuthenticated]);
   return (
     <XyzTransition
       appear
@@ -81,13 +102,13 @@ const HomePage: React.FC<Props> = ({ setLoading }) => {
           </div>
         </div>
         <div className="flex flex-col w-full rounded-sm mt-5">
-          <div className="bg-slate-600 w-full rounded-t-lg p-2 pl-5 text-white">
+          <div className="bg-slate-800 w-full rounded-t-lg p-2 pl-5 text-white">
             <p className="text-lg font-bold">Flash sale</p>
             <p className="text-sm font-light	">
               Hundreds of products catching the latest trends
             </p>
           </div>
-          <div className="flex flex-row bg-slate-400 w-full rounded-b-lg p-2 overflow-x-auto scrollbar-hide">
+          <div className="flex flex-row bg-slate-100 w-full rounded-b-lg p-3 overflow-x-auto scrollbar-hide">
             {saleProducts.map((element, index) => {
               return <CardItem data={element} key={index} />;
             })}
@@ -128,6 +149,23 @@ const HomePage: React.FC<Props> = ({ setLoading }) => {
             </Button>
           </div>
         </div>
+        {isAuthenticated && (
+          <div className="flex flex-col justify-center items-center w-full h-full mt-5 p-3">
+            <p className="font-medium tracking-widest text-lg bg-slate-800 w-full h-[50px] text-white flex items-center justify-center min-w-[300px]">
+              Recommended for you
+            </p>
+            <div
+              className="mt-2 p-10 grid w-full gap-x-3 gap-y-5 justify-items-center"
+              style={{
+                gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
+              }}
+            >
+              {dataProductRecommend?.map((element: any, index: number) => {
+                return <CardItem data={element} key={index} />;
+              })}
+            </div>
+          </div>
+        )}
         <div className="flex flex-col justify-center items-center w-full h-full mt-5 p-3">
           <p className="font-medium text-lg bg-slate-800 w-full h-[50px] text-white flex items-center justify-center min-w-[300px]">
             STORE SYSTEM
@@ -223,7 +261,11 @@ const HomePage: React.FC<Props> = ({ setLoading }) => {
 };
 
 type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps;
-const mapStateToProps = () => ({});
+const mapStateToProps = (state: RootState) => {
+  return {
+    isAuthenticated: state.authReducer.isAuthenticated,
+  };
+};
 
 const mapDispatchToProps = { setLoading };
 

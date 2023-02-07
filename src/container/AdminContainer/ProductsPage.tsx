@@ -131,7 +131,7 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
   const onCreate = async (values: any) => {
     const formData = new FormData();
     formData.append("name", values.name);
-    formData.append("descriptions", values.description);
+    formData.append("descriptions", values.description || "");
     formData.append("quantity", values.quantity);
     formData.append("price", values.price);
     formData.append("salePrice", values.salePrice);

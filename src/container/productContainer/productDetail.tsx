@@ -14,6 +14,7 @@ import EvaluationProduct from "./EvaluationProduct";
 import SlideShow from "./SlideShow";
 import { setLoading } from "../../redux/loading/actions";
 import { toast } from "react-toastify";
+import { CardItem } from "../../components";
 
 const ProductDetail: React.FC<Props> = ({
   loading,
@@ -23,6 +24,7 @@ const ProductDetail: React.FC<Props> = ({
   setLoading,
 }) => {
   const [dataProduct, setDataProduct] = useState<any>();
+  const [dataProductRecommend, setDataProductRecommend] = useState<any>();
   const [quantityOrder, setQuantityOrder] = useState<any>(1);
   const location = useLocation();
   const idProduct = location.pathname.replace("/product/", "");
@@ -46,12 +48,38 @@ const ProductDetail: React.FC<Props> = ({
           draggable: true,
           progress: undefined,
         });
-      } finally {
-        setLoading(false);
       }
     };
     fetchData();
   }, [location]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}products/recommend/${dataProduct?.data?.name}`
+        );
+        setDataProductRecommend(response?.data);
+      } catch (error) {
+        setLoading(false);
+        toast.error("Something went wrong", {
+          position: "bottom-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (dataProduct) {
+      fetchData();
+    }
+  }, [dataProduct]);
+  console.log(dataProductRecommend);
   const onChange = (value: any) => {
     setQuantityOrder(value);
   };
@@ -211,6 +239,21 @@ const ProductDetail: React.FC<Props> = ({
           productId={idProduct}
           isAuthenticated={isAuthenticated}
         />
+        <div className="p-5">
+          <p className="font-medium text-lg border-b-2 w-1/5 border-slate-800">
+            Recommended for you
+          </p>
+          <div
+            className="relative z-1 p-10 grid w-full gap-x-3 gap-y-5 justify-items-center"
+            style={{
+              gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
+            }}
+          >
+            {dataProductRecommend?.map((element: any, index: number) => {
+              return <CardItem data={element} key={index} />;
+            })}
+          </div>
+        </div>
       </div>
     );
   }
