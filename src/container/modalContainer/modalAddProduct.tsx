@@ -20,7 +20,7 @@ interface Values {
 
 interface CollectionFormProps {
   open: boolean;
-  //   lockupData: object;
+  dataSelect: { brand: []; color: []; material: []; design: []; type: [] };
   onCreate: (values: Values) => void;
   onCancel: () => void;
 }
@@ -36,13 +36,13 @@ const uploadButton = (
 
 export const ModalAddProduct: React.FC<CollectionFormProps> = ({
   open,
-  //   lockupData,
+  dataSelect,
   onCreate,
   onCancel,
 }) => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
-
+  console.log(dataSelect);
   const handleChange = (file: any) => setFileList(file?.fileList);
   return (
     <Modal
@@ -107,19 +107,11 @@ export const ModalAddProduct: React.FC<CollectionFormProps> = ({
           rules={[
             {
               required: true,
-              message: "Please input the address",
+              message: "Please select color",
             },
           ]}
         >
-          <Select
-            defaultValue="lucy"
-            options={[
-              { value: "jack", label: "Jack" },
-              { value: "lucy", label: "Lucy" },
-              { value: "Yiminghe", label: "yiminghe" },
-              { value: "disabled", label: "Disabled", disabled: true },
-            ]}
-          />
+          <Select options={dataSelect?.color} />
         </Form.Item>
         <Form.Item
           name="material"
@@ -131,15 +123,7 @@ export const ModalAddProduct: React.FC<CollectionFormProps> = ({
             },
           ]}
         >
-          <Select
-            defaultValue="lucy"
-            options={[
-              { value: "jack", label: "Jack" },
-              { value: "lucy", label: "Lucy" },
-              { value: "Yiminghe", label: "yiminghe" },
-              { value: "disabled", label: "Disabled", disabled: true },
-            ]}
-          />
+          <Select options={dataSelect?.material} />
         </Form.Item>
         <Form.Item
           name="design"
@@ -151,15 +135,7 @@ export const ModalAddProduct: React.FC<CollectionFormProps> = ({
             },
           ]}
         >
-          <Select
-            defaultValue="lucy"
-            options={[
-              { value: "jack", label: "Jack" },
-              { value: "lucy", label: "Lucy" },
-              { value: "Yiminghe", label: "yiminghe" },
-              { value: "disabled", label: "Disabled", disabled: true },
-            ]}
-          />
+          <Select options={dataSelect?.design} />
         </Form.Item>
         <Form.Item
           name="type"
@@ -171,15 +147,7 @@ export const ModalAddProduct: React.FC<CollectionFormProps> = ({
             },
           ]}
         >
-          <Select
-            defaultValue="lucy"
-            options={[
-              { value: "jack", label: "Jack" },
-              { value: "lucy", label: "Lucy" },
-              { value: "Yiminghe", label: "yiminghe" },
-              { value: "disabled", label: "Disabled", disabled: true },
-            ]}
-          />
+          <Select options={dataSelect?.type} />
         </Form.Item>
         <Form.Item
           name="brand"
@@ -191,15 +159,7 @@ export const ModalAddProduct: React.FC<CollectionFormProps> = ({
             },
           ]}
         >
-          <Select
-            defaultValue="lucy"
-            options={[
-              { value: "jack", label: "Jack" },
-              { value: "lucy", label: "Lucy" },
-              { value: "Yiminghe", label: "yiminghe" },
-              { value: "disabled", label: "Disabled", disabled: true },
-            ]}
-          />
+          <Select options={dataSelect?.brand} />
         </Form.Item>
         <Form.Item
           style={{ marginTop: "-5px" }}

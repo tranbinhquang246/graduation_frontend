@@ -1,13 +1,20 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import type { ColumnsType, TableProps } from "antd/es/table";
+import type { ColumnsType } from "antd/es/table";
 import { ModalAddProduct } from "../modalContainer";
 import { setLoading } from "../../redux/loading/actions";
 import axiosConfig from "../../axiosInterceptor/AxioConfig";
-import { handleDataforTable, handleError } from "../../service";
+import {
+  handleDataforSelect,
+  handleDataforTable,
+  handleError,
+} from "../../service";
 import getLockUpData from "../../service/getLockupData";
 import { ColumnFilterItem } from "antd/es/table/interface";
 import Table from "antd/es/table";
+import axiosConfigUploadImage from "../../axiosInterceptor/AxiosUploadImage";
 
 interface LockupData {
   type: ColumnFilterItem[];
@@ -17,7 +24,6 @@ interface LockupData {
   color: ColumnFilterItem[];
 }
 interface DataType {
-  key: React.Key;
   id: number;
   name: string;
   type: string;
@@ -32,7 +38,10 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
   const [lockupDataSource, setLockupDataSource] = useState<any>();
   const [lockupDataHanldedSource, setLockupDataHanldedSource] =
     useState<LockupData>();
+  const [lockupDataForSelect, setLockupDataForSelect] = useState<any>();
   const [collumnName, setCollumnName] = useState<any>();
+  const [handleCreateProductSuccess, setHanleCreateProductSuccess] =
+    useState<boolean>(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,12 +60,13 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [handleCreateProductSuccess]);
   useEffect(() => {
     if (lockupDataSource) {
       setLockupDataHanldedSource(
         handleDataforTable.collumnName(lockupDataSource)
       );
+      setLockupDataForSelect(handleDataforSelect.collumnName(lockupDataSource));
     }
   }, [lockupDataSource]);
   useEffect(() => {
@@ -107,7 +117,7 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
         {
           title: "Action",
           render: (text, record) => (
-            <span>
+            <span className="text-blue-500 flex justify-around">
               <a onClick={() => handleEdit(record)}>Edit</a>
               <a onClick={() => handleDelete(record)}>Delete</a>
             </span>
@@ -118,8 +128,32 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
     }
   }, [lockupDataHanldedSource]);
 
-  const onCreate = (values: any) => {
-    console.log(values);
+  const onCreate = async (values: any) => {
+    const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("descriptions", values.description);
+    formData.append("quantity", values.quantity);
+    formData.append("price", values.price);
+    formData.append("salePrice", values.salePrice);
+    formData.append("color", values.color);
+    formData.append("material", values.material);
+    formData.append("design", values.design);
+    formData.append("type", values.type);
+    formData.append("brand", values.brand);
+    formData.append("mainImg", values.mainImg.file);
+    await axiosConfigUploadImage({
+      method: "post",
+      url: `${process.env.REACT_APP_API_URL}products`,
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(async (response) => {
+        setOpenModal(false);
+        setHanleCreateProductSuccess(!handleCreateProductSuccess);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
   };
   const handleEdit = (record: any) => {
     console.log("Editing record: ", record);
@@ -129,22 +163,25 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
     console.log("Deleting record: ", record);
   };
   return (
-    <div className="w-full overflow-scroll mt-[56px] p-2 lg:p-5">
-      <div className="flex justify-start w-full">
+    <div className="w-full mt-[56px] p-2 lg:p-5">
+      <div className="flex justify-end md:justify-between w-full">
+        <p className="hidden md:block">Total: {dataSource.length}</p>
         <button
           className="text-xs border-2 p-2 rounded-sm border-[#1e293b] hover:text-white hover:bg-[#1e293b]"
           onClick={() => {
             setOpenModal(true);
           }}
         >
-          Add new address
+          Add new product
         </button>
       </div>
-      {dataSource && <Table columns={collumnName} dataSource={dataSource} />}
-
+      <div className="w-full overflow-scroll">
+        {dataSource && <Table columns={collumnName} dataSource={dataSource} />}
+      </div>
       <ModalAddProduct
         open={openModal}
         onCreate={onCreate}
+        dataSelect={lockupDataForSelect}
         onCancel={() => {
           setOpenModal(false);
         }}

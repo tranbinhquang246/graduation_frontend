@@ -19,7 +19,8 @@ const HomePage: React.FC<Props> = ({ setLoading }) => {
   const navigate = useNavigate();
   const [newestProducts, setNewestProducts] = useState([]);
   const [saleProducts, setSaleProducts] = useState([]);
-
+  const [imageSlider, setImageSlider] = useState<any>([]);
+  const [handeledimageSlider, setHandledImageSlider] = useState<any>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,8 +31,12 @@ const HomePage: React.FC<Props> = ({ setLoading }) => {
         const sale = await axios.get(
           `${process.env.REACT_APP_API_URL}products/sale`
         );
+        const banner = await axios.get(
+          `${process.env.REACT_APP_API_URL}banner-ads`
+        );
         setNewestProducts(newest?.data);
         setSaleProducts(sale?.data);
+        setImageSlider(banner?.data);
       } catch (error) {
         handleError(error);
       } finally {
@@ -40,12 +45,17 @@ const HomePage: React.FC<Props> = ({ setLoading }) => {
     };
     fetchData();
   }, []);
-
-  const imagSliderCollection = [
-    "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-    "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
-    "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-  ];
+  useEffect(() => {
+    let handleData: any[] = [];
+    if (imageSlider.length) {
+      const spliceArr = imageSlider.slice(2);
+      spliceArr.forEach((data: any) => {
+        handleData.push(data?.link);
+      });
+      setHandledImageSlider(handleData);
+    }
+  }, [imageSlider]);
+  console.log(imageSlider);
   return (
     <XyzTransition
       appear
@@ -55,18 +65,18 @@ const HomePage: React.FC<Props> = ({ setLoading }) => {
       <div className="flex flex-col w-full p-3 mt-[56px]">
         <div className="flex w-full h-full max-h-[350px]">
           <div className="flex w-full md:w-2/3 h-full p-2">
-            <CarouselComponet />
+            <CarouselComponet data={handeledimageSlider} />
           </div>
           <div className="hidden md:flex md:w-1/3 h-full md:flex-col p-2">
             <img
               className="w-full h-1/2 pb-1"
-              src="https://images.unsplash.com/photo-1533167649158-6d508895b680?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8c3BsYXNofGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-              alt=""
+              src={imageSlider[0]?.link}
+              alt="imgslider1"
             ></img>
             <img
               className="w-full h-1/2 pt-1"
-              src="https://images.unsplash.com/photo-1533167649158-6d508895b680?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8c3BsYXNofGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-              alt=""
+              src={imageSlider[1]?.link}
+              alt="imgslider2"
             ></img>
           </div>
         </div>
@@ -197,7 +207,7 @@ const HomePage: React.FC<Props> = ({ setLoading }) => {
           </p>
         </div>
         <Zoom scale={1.4} indicators={true}>
-          {imagSliderCollection.map((each, index) => (
+          {handeledimageSlider.map((each: any, index: number) => (
             <div key={index} style={{ width: "100%" }}>
               <img
                 style={{ objectFit: "contain", width: "100%" }}

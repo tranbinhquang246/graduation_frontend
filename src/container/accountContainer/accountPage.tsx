@@ -12,10 +12,11 @@ import {
   MdOutlineFavoriteBorder,
   MdDeleteOutline,
 } from "react-icons/md";
-import { ModalDeleteAccount } from "../modalContainer";
+
 import { setLoading } from "../../redux/loading/actions";
 import axiosConfig from "../../axiosInterceptor/AxioConfig";
 import { toast } from "react-toastify";
+import { ModalDelete } from "../modalContainer";
 
 const AccountPage: React.FC<Props> = ({ userInfor, isAuthenticated }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -176,7 +177,7 @@ const AccountPage: React.FC<Props> = ({ userInfor, isAuthenticated }) => {
       <div className="flex flex-col w-full mt-5 md:w-2/3">
         <Outlet />
       </div>
-      <ModalDeleteAccount
+      <ModalDelete
         open={openModal}
         onDelete={onDeleteAccount}
         onCancel={() => {

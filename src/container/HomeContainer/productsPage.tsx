@@ -34,7 +34,7 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
         }&brand=${searchParams.get("brand") || ""}&color=${
           searchParams.get("color") || ""
         }&page=${searchParams.get("page") || 1}&limit=${
-          searchParams.get("limit") || 6
+          searchParams.get("limit") || 8
         }&searchWord=${searchParams.get("search") || ""}`
       )
       .then((response) => {
