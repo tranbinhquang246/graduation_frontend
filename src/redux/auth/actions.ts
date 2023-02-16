@@ -11,7 +11,7 @@ export const signupFailure = createAction<any>("SIGNUP_FAILURE");
 
 export const setAuthentication = createAction<boolean>("SET_AUTHENTICATION");
 
-export const setDataUser = createAction<DataUserPayload>("SET_DATA_USER");
+export const setUserRole = createAction<DataUserPayload>("SET_USER_ROLE");
 
 export const deleteAccountRequest = createAction("DELETE_ACCOUNT_REQUEST");
 export const deleteAccountSuccess = createAction("DELETE_ACCOUNT_SUCCESS");

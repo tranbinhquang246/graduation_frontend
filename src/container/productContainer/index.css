@@ -18,11 +18,4 @@
 	color: "#1e293b";
 	font-family: Ubuntu, sans-serif !important;
 }
-li {
-    list-style-type: circle;
-}
-
-li li {
-    list-style-type: square;
-}
 

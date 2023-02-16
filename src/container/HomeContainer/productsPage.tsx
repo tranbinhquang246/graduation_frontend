@@ -99,24 +99,30 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
           <div className="w-1/5 min-w-[150px]">
             <SideBarProduct />
           </div>
-          <div className="flex flex-col w-4/5">
-            <div
-              className=" relative z-1 p-5 grid w-full gap-x-3 gap-y-5 justify-items-center"
-              style={{
-                gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
-              }}
-            >
-              {dataProducts.map((element, index) => {
-                return <CardItem data={element} key={index} />;
-              })}
+          {dataProducts?.length ? (
+            <div className="flex flex-col w-4/5">
+              <div
+                className=" relative z-1 p-5 grid w-full gap-x-3 gap-y-5 justify-items-center"
+                style={{
+                  gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
+                }}
+              >
+                {dataProducts.map((element, index) => {
+                  return <CardItem data={element} key={index} />;
+                })}
+              </div>
+              <div className="w-full flex items-center justify-center">
+                <PaginationComponent
+                  totalPage={totalPages}
+                  currentPage={currentPages}
+                />
+              </div>
             </div>
-            <div className="w-full flex items-center justify-center">
-              <PaginationComponent
-                totalPage={totalPages}
-                currentPage={currentPages}
-              />
+          ) : (
+            <div className="w-full flex justify-center items-center">
+              <img src={IMAGES.Notfounditem} alt="notfounditem"></img>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </XyzTransition>

@@ -24,17 +24,16 @@ import Loading from "./Loading";
 export const HeaderSection: React.FC<Props> = ({
   userInfor,
   quantityCart,
-  dataUser,
+  userRole,
 }) => {
   const navigate = useNavigate();
-  console.log(dataUser);
   const handleClick = async () => {
     localStorage.removeItem("jwt_token");
     window.location.reload();
   };
 
   const items: MenuProps["items"] = [];
-  if (dataUser?.userRole === "admin") {
+  if (userRole === "admin") {
     items.push(
       {
         key: "1",
@@ -106,7 +105,7 @@ export const HeaderSection: React.FC<Props> = ({
   }
 
   return (
-    <div className="flex fixed z-50 h-[56px] w-full justify-between bg-slate-800">
+    <div className="flex fixed z-50 h-[56px] w-full justify-between bg-[#001529]">
       <Loading />
       <img
         src={IMAGES.logoApp}
@@ -196,7 +195,7 @@ export const HeaderSection: React.FC<Props> = ({
           </NavLink>
         </div>
       </div>
-      {dataUser?.userRole ? (
+      {userRole ? (
         <div className="flex mr-3 items-center justify-center">
           <Badge
             count={quantityCart}
@@ -249,7 +248,7 @@ const mapStateToProps = (state: RootState) => {
     isSetUserInforSuccess: state.userInforReducer.isSetUserInforSuccess,
     addOrderSuccess: state.orderReducer.addOrderSuccess,
     quantityCart: state.cartReducer.quantityCart,
-    dataUser: state.authReducer.dataUser,
+    userRole: state.authReducer.userRole,
   };
 };
 

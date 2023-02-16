@@ -9,5 +9,5 @@ export type SignupPayload = {
 };
 
 export type DataUserPayload = {
-  dataUser: any;
+  userRole: string;
 };

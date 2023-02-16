@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import { Footer, Header } from "../components";
 import { RootState } from "../redux/store";
 import { setCartID, setQuantityCart } from "../redux/cart/actions";
-import { setAuthentication, setDataUser } from "../redux/auth/actions";
+import { setAuthentication, setUserRole } from "../redux/auth/actions";
 import { setLoading } from "../redux/loading/actions";
 import {
   setDeliveryAddress,
@@ -14,9 +14,8 @@ import {
 } from "../redux/user-infor/action";
 import axiosConfig from "../axiosInterceptor/AxioConfig";
 import { decodeJwt, handleError } from "../service";
-import checkAuthenticated from "../service/checkAuthentication";
 
-export const MainLayout: React.FC<Props> = ({
+export const HomeLayout: React.FC<Props> = ({
   cartId,
   setCartID,
   addCardSuccess,
@@ -30,39 +29,39 @@ export const MainLayout: React.FC<Props> = ({
   setUserInforSuccess,
   addOrderSuccess,
   setQuantityCart,
-  setDataUser,
+  setUserRole,
 }) => {
   useEffect(() => {
     const fetchData = async () => {
       const decodedJwt = await decodeJwt();
-      try {
-        setLoading(true);
-        const response = await axiosConfig.get(
-          `${process.env.REACT_APP_API_URL}user/${decodedJwt?.id}`
-        );
-        setDataUser({ dataUser: response?.data });
-        setCartID({ cardId: response?.data?.Cart.id });
-        setQuantityCart({
-          quantity: (response?.data?.Cart.cartDetail).length,
-        });
-        setDeliveryAddress({
-          deliveryAddress: response?.data.addressDeliverys,
-        });
-        setFavorite({ favorite: response?.data.favorite });
-        setAuthentication(true);
-      } catch (error) {
-        setAuthentication(false);
-        setCartID({ cardId: 0 });
-      } finally {
-        setLoading(false);
-        return;
+      if (decodedJwt || addOrderSuccess) {
+        try {
+          setLoading(true);
+          const response = await axiosConfig.get(
+            `${process.env.REACT_APP_API_URL}user/${decodedJwt?.id}`
+          );
+          setUserRole({ userRole: response?.data?.userRole });
+          setCartID({ cardId: response?.data?.Cart.id });
+          setQuantityCart({
+            quantity: (response?.data?.Cart.cartDetail).length,
+          });
+          setDeliveryAddress({
+            deliveryAddress: response?.data.addressDeliverys,
+          });
+          setFavorite({ favorite: response?.data.favorite });
+          setAuthentication(true);
+        } catch (error) {
+          setAuthentication(false);
+          setCartID({ cardId: 0 });
+        } finally {
+          setLoading(false);
+          return;
+        }
       }
-    };
-    const authenticated = checkAuthenticated();
-    if (authenticated || addOrderSuccess) {
-      fetchData();
       return;
-    }
+    };
+
+    fetchData();
   }, [addOrderSuccess]);
 
   useEffect(() => {
@@ -136,7 +135,7 @@ const mapDispatchToProps = {
   setFavorite,
   setUserInforSuccess,
   setQuantityCart,
-  setDataUser,
+  setUserRole,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeLayout);

@@ -5,6 +5,27 @@ import { RadioChangeEvent, Space } from "antd";
 import { Radio } from "antd";
 import { useSearchParams } from "react-router-dom";
 import "./radiobutton.css";
+import type { MenuProps } from "antd";
+import { Menu } from "antd";
+import { handleError } from "../service";
+
+type MenuItem = Required<MenuProps>["items"][number];
+
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  type?: "group"
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  } as MenuItem;
+}
 
 export const ItemSideBarProduct = (props: {
   param: string;
@@ -13,49 +34,67 @@ export const ItemSideBarProduct = (props: {
 }) => {
   const [data, setData] = useState([]);
   let [searchParams, setSearchParams] = useSearchParams();
-  const [valueRadio, setValueRadio] = useState(props.init);
+  const [isMobileScreen, setIsMobileScreen] = useState(false);
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}lookup-data/${props.param}`)
       .then((response) => {
         setData(response?.data);
       })
-      .catch((error) => {});
+      .catch((error) => {
+        handleError(error);
+      });
   }, []);
 
-  const onChange = (e: RadioChangeEvent) => {
-    if (e.target.value === "all") {
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth <= 768) {
+        setIsMobileScreen(true);
+      } else {
+        setIsMobileScreen(false);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const itemMenu = data.map((element: any) => {
+    return getItem(capitalizeFirstLetter(element.name), element.name);
+  });
+  itemMenu.unshift(getItem("All", "all"));
+  const items: MenuProps["items"] = [
+    getItem(props?.title, "item", null, itemMenu),
+  ];
+
+  const onClick: MenuProps["onClick"] = (e) => {
+    if (e.key === "all") {
       searchParams.delete(props.param);
-      setValueRadio(e.target.value);
       setSearchParams(searchParams);
       return;
     }
-    setValueRadio(e.target.value);
-    searchParams.set(props.param, e.target.value);
+    searchParams.set(props.param, e.key);
     setSearchParams(searchParams);
   };
 
-  function capitalizeFirstLetter(string: string) {
+  function capitalizeFirstLetter(string: any) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   return (
-    <div className="mb-5">
-      <p className="font-medium text-md">{props.title}</p>
-      <Radio.Group onChange={onChange} value={valueRadio}>
-        <Space direction="vertical">
-          <Radio value={"all"} key={0}>
-            All
-          </Radio>
-          {data.map((element: any) => {
-            return (
-              <Radio value={element.name} key={element.id}>
-                {capitalizeFirstLetter(element.name)}
-              </Radio>
-            );
-          })}
-        </Space>
-      </Radio.Group>
+    <div className="w-full">
+      <Menu
+        className=""
+        defaultSelectedKeys={[props?.init]}
+        mode="inline"
+        theme="dark"
+        // inlineCollapsed={isMobileScreen}
+        items={items}
+        onClick={onClick}
+      />
     </div>
   );
 };

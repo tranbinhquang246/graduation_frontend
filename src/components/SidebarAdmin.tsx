@@ -65,9 +65,9 @@ const SidebarAdmin: React.FC = () => {
   };
 
   return (
-    <div className="mt-[56px]">
+    <div className="mt-[56px] h-screen">
       <Menu
-        className="min-h-screen"
+        className="h-screen"
         defaultSelectedKeys={[location.pathname]}
         mode="inline"
         theme="dark"

@@ -7,7 +7,7 @@ import { FaTiktok } from "react-icons/fa";
 
 export const FooterSection = () => {
   return (
-    <div className="flex flex-wrap w-full p-5 bg-slate-800 text-slate-100">
+    <div className="flex flex-wrap w-full p-5 bg-[#001529] text-slate-100">
       <div className="w-1/4 min-w-[186px] mb-2">
         <p className="font-medium text-sm w-3/4 mb-1 border-b-[1px] border-b-slate-400">
           Services

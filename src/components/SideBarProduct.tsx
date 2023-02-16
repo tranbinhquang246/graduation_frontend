@@ -12,7 +12,7 @@ const SideBarProduct = () => {
   const [initColor] = useState(searchParams.get("color") || "all");
 
   return (
-    <div className="flex flex-col p-3 md:p-5 border-r-2">
+    <div className="flex flex-col border-r-2 h-full bg-[#001529]">
       <ItemSideBarProduct param={"type"} title={"Type"} init={initType} />
       <ItemSideBarProduct param={"design"} title={"Design"} init={initDesign} />
       <ItemSideBarProduct

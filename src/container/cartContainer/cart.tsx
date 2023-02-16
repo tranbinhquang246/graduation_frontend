@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { RootState } from "../../redux/store";
 import axiosConfig from "../../axiosInterceptor/AxioConfig";
-import checkAuthenticated from "../../service/checkAuthentication";
 import { decodeJwt, handleError } from "../../service";
 import { CardItemCartComponent } from "../../components";
 import { IMAGES } from "../../assets";
@@ -42,24 +41,24 @@ const CartPage: React.FC<Props> = ({
   useEffect(() => {
     const fetchData = async () => {
       const decodedJwt = await decodeJwt();
-      try {
-        setLoading(true);
-        await axiosConfig
-          .get(`${process.env.REACT_APP_API_URL}cart/${decodedJwt?.id}`)
-          .then((response) => {
-            setDataCart(response?.data[0]?.cartDetail);
-          });
-      } catch (error) {
-        handleError(error);
-      } finally {
-        setLoading(false);
+      if (decodedJwt) {
+        try {
+          setLoading(true);
+          await axiosConfig
+            .get(`${process.env.REACT_APP_API_URL}cart/${decodedJwt?.id}`)
+            .then((response) => {
+              setDataCart(response?.data[0]?.cartDetail);
+            });
+        } catch (error) {
+          handleError(error);
+        } finally {
+          setLoading(false);
+          return;
+        }
       }
-    };
-    const authenticated = checkAuthenticated();
-    if (authenticated) {
-      fetchData();
       return;
-    }
+    };
+    fetchData();
   }, [updateQuantitySuccess, removeCardSuccess]);
 
   useEffect(() => {

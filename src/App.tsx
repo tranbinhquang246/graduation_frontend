@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LoginPage, SignUpPage } from "./container/authContainer";
-import ProductsMainLayout from "./layout/MainLayout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -32,24 +31,29 @@ import {
 } from "./container/AdminContainer";
 import ErrorLayout from "./layout/ErrorLayout";
 import { withAuthAdmin } from "./service/withAuthAdminHOC";
+import HomeLayout from "./layout/HomeLayout";
+import { withAuth } from "./service/withAuthenticationHOC";
 
 function App() {
   const AdminLayoutWithAuth = withAuthAdmin(AdminLayout);
+  const CartPageWithAuth = withAuth(CartPage);
+  const AccountPageWithAuth = withAuth(AccountPage);
+  const EditPageWithAuth = withAuth(EditAccount);
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/" element={<ProductsMainLayout />}>
+        <Route path="/" element={<HomeLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/product/:productID" element={<ProductDetail />} />
           <Route path="/about-me" element={<ABoutMePage />} />
           <Route path="/tracking" element={<TrackOrderPage />} />
           <Route path="/blog" element={<BlogPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/account" element={<AccountPage />}>
-            <Route index element={<EditAccount />} />
+          <Route path="/cart" element={<CartPageWithAuth />} />
+          <Route path="/account" element={<AccountPageWithAuth />}>
+            <Route index element={<EditPageWithAuth />} />
             <Route path="edit-address" element={<EditAddressDelivery />} />
             <Route path="ordered" element={<Ordered />} />
             <Route path="favorite" element={<Favorite />} />
