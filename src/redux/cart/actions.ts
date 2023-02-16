@@ -3,6 +3,7 @@ import {
   CardDetailIDPayload,
   CardIDPayload,
   CartPayload,
+  QuantityCartPayload,
   UpdateQuantityPayload,
 } from "./type";
 
@@ -10,6 +11,9 @@ export const setCartID = createAction<CardIDPayload>("SET_CARTID");
 export const addCartRequest = createAction<CartPayload>("ADDCART_REQUEST");
 export const addCartSuccess = createAction<any>("ADDCART_SUCCESS");
 export const addCartFailure = createAction<any>("ADDCART_FAILURE");
+
+export const setQuantityCart =
+  createAction<QuantityCartPayload>("SET_QUANTITY_CART");
 
 export const updateQuantityRequest = createAction<UpdateQuantityPayload>(
   "UPDATEQUANTITY_REQUEST"

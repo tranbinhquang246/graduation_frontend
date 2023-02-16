@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { LoginPayload, SignupPayload } from "./type";
+import { DataUserPayload, LoginPayload, SignupPayload } from "./type";
 
 export const loginRequest = createAction<LoginPayload>("LOGIN_REQUEST");
 export const loginSuccess = createAction<any>("LOGIN_SUCCESS");
@@ -10,6 +10,8 @@ export const signupSuccess = createAction<any>("SIGNUP_SUCCESS");
 export const signupFailure = createAction<any>("SIGNUP_FAILURE");
 
 export const setAuthentication = createAction<boolean>("SET_AUTHENTICATION");
+
+export const setDataUser = createAction<DataUserPayload>("SET_DATA_USER");
 
 export const deleteAccountRequest = createAction("DELETE_ACCOUNT_REQUEST");
 export const deleteAccountSuccess = createAction("DELETE_ACCOUNT_SUCCESS");

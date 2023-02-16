@@ -7,15 +7,20 @@ import {
   signupSuccess,
   signupFailure,
   setAuthentication,
+  setDataUser,
 } from "./actions";
 
 const initialState = {
+  dataUser: { userRole: "" },
   loading: false,
   isAuthenticated: false,
 };
 
 export const authReducer = createReducer(initialState, (builder) => {
   builder
+    .addCase(setDataUser, (state, action) => {
+      state.dataUser = action.payload.dataUser;
+    })
     .addCase(loginRequest, (state, action) => {
       state.loading = true;
     })

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { IMAGES } from "../assets";
 import { NavLink } from "react-router-dom";
@@ -11,122 +11,30 @@ import { AiFillShopping } from "react-icons/ai";
 import { SiAboutdotme } from "react-icons/si";
 import { MdLocationPin } from "react-icons/md";
 import { FaBloggerB } from "react-icons/fa";
-import { decodeJwt, handleError } from "../service";
-import axiosConfig from "../axiosInterceptor/AxioConfig";
 import {
   UserOutlined,
   EditOutlined,
   LogoutOutlined,
   GoldOutlined,
 } from "@ant-design/icons";
-import checkAuthenticated from "../service/checkAuthentication";
 import type { MenuProps } from "antd";
-import { setCartID } from "../redux/cart/actions";
 import { RootState } from "../redux/store";
-import { setAuthentication } from "../redux/auth/actions";
-import { setLoading } from "../redux/loading/actions";
 import Loading from "./Loading";
-import {
-  setDeliveryAddress,
-  setFavorite,
-  setUserInfor,
-  setUserInforSuccess,
-} from "../redux/user-infor/action";
 
 export const HeaderSection: React.FC<Props> = ({
-  cartId,
-  setCartID,
-  addCardSuccess,
-  removeCardSuccess,
-  setAuthentication,
-  setLoading,
-  setUserInfor,
   userInfor,
-  isSetUserInforSuccess,
-  setDeliveryAddress,
-  setFavorite,
-  setUserInforSuccess,
-  addOrderSuccess,
+  quantityCart,
+  dataUser,
 }) => {
-  const [dataUser, setDataUser] = useState<any>();
   const navigate = useNavigate();
-  const [quantityCart, setQuantityCart] = useState<number>(0);
-  useEffect(() => {
-    const fetchData = async () => {
-      const decodedJwt = await decodeJwt();
-      try {
-        setLoading(true);
-        const response = await axiosConfig.get(
-          `${process.env.REACT_APP_API_URL}user/${decodedJwt?.id}`
-        );
-        setDataUser(response);
-        setCartID({ cardId: response?.data?.Cart.id });
-        setQuantityCart((response?.data?.Cart.cartDetail).length);
-        setDeliveryAddress({
-          deliveryAddress: response?.data.addressDeliverys,
-        });
-        setFavorite({ favorite: response?.data.favorite });
-        setAuthentication(true);
-      } catch (error) {
-        setAuthentication(false);
-        setDataUser(null);
-        setCartID({ cardId: 0 });
-        setQuantityCart(0);
-      } finally {
-        setLoading(false);
-        return;
-      }
-    };
-    const authenticated = checkAuthenticated();
-    if (authenticated || addOrderSuccess) {
-      fetchData();
-      return;
-    }
-  }, [addOrderSuccess]);
-  useEffect(() => {
-    const fetchData = async () => {
-      if (isSetUserInforSuccess) {
-        const decodedJwt = await decodeJwt();
-        try {
-          setLoading(true);
-          const response = await axiosConfig.get(
-            `${process.env.REACT_APP_API_URL}user-infor/${decodedJwt?.id}`
-          );
-          setUserInfor({ userInfor: response?.data });
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setLoading(false);
-          setUserInforSuccess(false);
-        }
-        return;
-      }
-    };
-    fetchData();
-  }, [isSetUserInforSuccess]);
-  useEffect(() => {
-    const fetchData = async () => {
-      if (cartId) {
-        try {
-          const response = await axiosConfig.get(
-            `${process.env.REACT_APP_API_URL}cart-detail/${cartId}`
-          );
-          setQuantityCart((response?.data).length);
-        } catch (error) {
-          handleError(error);
-        }
-      }
-    };
-    fetchData();
-  }, [addCardSuccess, removeCardSuccess]);
-
+  console.log(dataUser);
   const handleClick = async () => {
     localStorage.removeItem("jwt_token");
     window.location.reload();
   };
 
   const items: MenuProps["items"] = [];
-  if (dataUser?.data.userRole === "admin") {
+  if (dataUser?.userRole === "admin") {
     items.push(
       {
         key: "1",
@@ -288,7 +196,7 @@ export const HeaderSection: React.FC<Props> = ({
           </NavLink>
         </div>
       </div>
-      {dataUser ? (
+      {dataUser?.userRole ? (
         <div className="flex mr-3 items-center justify-center">
           <Badge
             count={quantityCart}
@@ -340,17 +248,11 @@ const mapStateToProps = (state: RootState) => {
     userInfor: state.userInforReducer.userInfor,
     isSetUserInforSuccess: state.userInforReducer.isSetUserInforSuccess,
     addOrderSuccess: state.orderReducer.addOrderSuccess,
+    quantityCart: state.cartReducer.quantityCart,
+    dataUser: state.authReducer.dataUser,
   };
 };
 
-const mapDispatchToProps = {
-  setCartID,
-  setAuthentication,
-  setLoading,
-  setUserInfor,
-  setDeliveryAddress,
-  setFavorite,
-  setUserInforSuccess,
-};
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderSection);

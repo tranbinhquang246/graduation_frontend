@@ -7,6 +7,7 @@ import {
   removeCartDetailRequest,
   removeCartDetailSuccess,
   setCartID,
+  setQuantityCart,
   updateQuantityFailure,
   updateQuantityRequest,
   updateQuantitySuccess,
@@ -14,6 +15,7 @@ import {
 
 const initialState = {
   cartId: 0,
+  quantityCart: 0,
   addCardSuccess: false,
   updateQuantity: false,
   removeCardSuccess: false,
@@ -24,6 +26,9 @@ export const cartReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(setCartID, (state, action) => {
       state.cartId = action.payload.cardId;
+    })
+    .addCase(setQuantityCart, (state, action) => {
+      state.quantityCart = action.payload.quantity;
     })
     .addCase(addCartRequest, (state, action) => {
       state.loading = true;

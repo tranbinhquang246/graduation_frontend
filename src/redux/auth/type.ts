@@ -7,3 +7,7 @@ export type SignupPayload = {
   email: string;
   password: string;
 };
+
+export type DataUserPayload = {
+  dataUser: any;
+};

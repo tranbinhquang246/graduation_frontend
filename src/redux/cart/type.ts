@@ -8,6 +8,10 @@ export type CardIDPayload = {
   cardId: number;
 };
 
+export type QuantityCartPayload = {
+  quantity: number;
+};
+
 export type UpdateQuantityPayload = {
   id: number;
   quantity: number;
