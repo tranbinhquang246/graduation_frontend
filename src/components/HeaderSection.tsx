@@ -119,7 +119,7 @@ export const HeaderSection: React.FC<Props> = ({
             className={({ isActive }) =>
               isActive
                 ? "flex items-center h-full text-blue-300 text-sm text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-300"
-                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover: duration-300"
+                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover:duration-300"
             }
           >
             <p className="hidden md:block">Homepage</p>
@@ -136,7 +136,7 @@ export const HeaderSection: React.FC<Props> = ({
             className={({ isActive }) =>
               isActive
                 ? "flex items-center h-full text-blue-300 text-sm text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-300"
-                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover: duration-300"
+                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover:duration-300"
             }
           >
             <p className="hidden md:block">Products</p>
@@ -152,7 +152,7 @@ export const HeaderSection: React.FC<Props> = ({
             className={({ isActive }) =>
               isActive
                 ? "flex items-center h-full text-blue-300 text-sm text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-300"
-                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover: duration-300"
+                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover:duration-300"
             }
           >
             <p className="hidden md:block">About Me</p>
@@ -168,7 +168,7 @@ export const HeaderSection: React.FC<Props> = ({
             className={({ isActive }) =>
               isActive
                 ? "flex items-center h-full text-blue-300 text-sm text-center font-medium hover:cursor-not-allowed border-b-[2px] border-b-blue-300"
-                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover: duration-300"
+                : "text-white font-medium text-sm cursor-pointer hover:text-blue-300 hover:duration-300"
             }
           >
             <p className="hidden md:block">Track Order</p>

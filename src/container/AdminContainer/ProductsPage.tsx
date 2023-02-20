@@ -42,6 +42,8 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
   const [collumnName, setCollumnName] = useState<any>();
   const [handleCreateProductSuccess, setHanleCreateProductSuccess] =
     useState<boolean>(false);
+  const [handleDeleteProductSuccess, setHanleDeleteProductSuccess] =
+    useState<boolean>(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,7 +62,7 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
       }
     };
     fetchData();
-  }, [handleCreateProductSuccess]);
+  }, [handleCreateProductSuccess, handleDeleteProductSuccess]);
   useEffect(() => {
     if (lockupDataSource) {
       setLockupDataHanldedSource(
@@ -159,11 +161,22 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
     console.log("Editing record: ", record);
   };
 
-  const handleDelete = (record: any) => {
-    console.log("Deleting record: ", record);
+  const handleDelete = async (record: any) => {
+    setLoading(true);
+    try {
+      await axiosConfig.delete(
+        `${process.env.REACT_APP_API_URL}products/${record.id}`
+      );
+      setHanleDeleteProductSuccess(!handleDeleteProductSuccess);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+      return;
+    }
   };
   return (
-    <div className="w-full mt-[56px] p-2 lg:p-5">
+    <div className="w-full p-2 lg:p-5">
       <div className="flex justify-end md:justify-between w-full">
         <p className="hidden md:block">Total: {dataSource.length}</p>
         <button

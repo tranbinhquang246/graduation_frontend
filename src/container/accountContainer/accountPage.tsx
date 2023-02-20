@@ -16,10 +16,17 @@ import {
 import { setLoading } from "../../redux/loading/actions";
 import axiosConfig from "../../axiosInterceptor/AxioConfig";
 import { toast } from "react-toastify";
-import { ModalDelete } from "../modalContainer";
+import { ModalChangeAvatar, ModalDelete } from "../modalContainer";
+import axiosConfigUploadImage from "../../axiosInterceptor/AxiosUploadImage";
+import { setUserInforSuccess } from "../../redux/user-infor/action";
 
-const AccountPage: React.FC<Props> = ({ userInfor, isAuthenticated }) => {
+const AccountPage: React.FC<Props> = ({
+  userInfor,
+  isAuthenticated,
+  setUserInforSuccess,
+}) => {
   const [openModal, setOpenModal] = useState(false);
+  const [openModalChangeAvatar, setOpenModalChangeAvatar] = useState(false);
   const decodedJwt = decodeJwt();
   const navigate = useNavigate();
   useEffect(() => {
@@ -35,16 +42,16 @@ const AccountPage: React.FC<Props> = ({ userInfor, isAuthenticated }) => {
       await axiosConfig.delete(
         `${process.env.REACT_APP_API_URL}user/delete/${userInfor?.userId}`
       );
-      toast.success("Delete successfully", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      //   toast.success("Delete successfully", {
+      //     position: "top-right",
+      //     autoClose: 5000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: "light",
+      //   });
       setOpenModal(false);
       localStorage.removeItem("jwt_token");
       window.location.href = "/";
@@ -55,14 +62,55 @@ const AccountPage: React.FC<Props> = ({ userInfor, isAuthenticated }) => {
     }
   };
 
+  const onChangeAvatar = async (values: any) => {
+    setUserInforSuccess(false);
+    const formData = new FormData();
+    formData.append("avatar", values.avatar.file);
+    await axiosConfigUploadImage({
+      method: "patch",
+      url: `${process.env.REACT_APP_API_URL}user-infor/edit/${userInfor?.userId}`,
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(async (response) => {
+        setOpenModalChangeAvatar(false);
+        setUserInforSuccess(true);
+      })
+      .catch((error) => {
+        handleError(error);
+      });
+  };
+
   return (
     <div className="w-full flex flex-col md:flex-row mt-[56px] font-ubuntu p-5">
       <div className="flex flex-col w-full md:w-1/3 items-center">
-        {userInfor?.avatar ? (
-          <Avatar shape="circle" size={120} src={userInfor.avatar} />
-        ) : (
-          <Avatar shape="square" size="large" src={IMAGES.userImage} />
-        )}
+        <div className="relative items-center">
+          {userInfor?.avatar ? (
+            <Avatar
+              shape="circle"
+              size={120}
+              src={userInfor.avatar}
+              className="w-[5rem] h-[5rem]"
+            />
+          ) : (
+            <Avatar
+              shape="square"
+              size="large"
+              src={IMAGES.userImage}
+              className="w-[5rem] h-[5rem]"
+            />
+          )}
+          <div className="absolute inset-0 bg-black rounded-full items-center opacity-0 transition-opacity duration-500 hover:opacity-80 hover:cursor-pointer">
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              onClick={() => {
+                setOpenModalChangeAvatar(true);
+              }}
+            >
+              <p className="text-white text-sm font-bold">Change</p>
+            </div>
+          </div>
+        </div>
         {userInfor?.firstName || userInfor?.lastName ? (
           <p className="font-medium text-2xl text-slate-600 mt-2">{`${userInfor?.firstName} ${userInfor?.lastName}`}</p>
         ) : (
@@ -184,6 +232,13 @@ const AccountPage: React.FC<Props> = ({ userInfor, isAuthenticated }) => {
           setOpenModal(false);
         }}
       />
+      <ModalChangeAvatar
+        open={openModalChangeAvatar}
+        onCreate={onChangeAvatar}
+        onCancel={() => {
+          setOpenModalChangeAvatar(false);
+        }}
+      />
     </div>
   );
 };
@@ -196,6 +251,6 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { setUserInforSuccess };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountPage);

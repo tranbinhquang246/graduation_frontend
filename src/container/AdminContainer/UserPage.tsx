@@ -18,6 +18,8 @@ interface DataType {
 export const UserPage: React.FC<Props> = ({ setLoading }) => {
   const [dataSource, setDataSource] = useState<any>([]);
   const [dataSourceHandled, setDataSourceHandled] = useState<any>([]);
+  const [handleDeleteUserSuccess, setHanleDeleteUserSuccess] =
+    useState<boolean>(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,7 +36,7 @@ export const UserPage: React.FC<Props> = ({ setLoading }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [handleDeleteUserSuccess]);
   useEffect(() => {
     let handleData: DataType[] = [];
     if (dataSource.length) {
@@ -51,8 +53,19 @@ export const UserPage: React.FC<Props> = ({ setLoading }) => {
     }
   }, [dataSource]);
 
-  const handleDelete = (record: any) => {
-    console.log("Deleting record: ", record);
+  const handleDelete = async (record: any) => {
+    setLoading(true);
+    try {
+      await axiosConfig.delete(
+        `${process.env.REACT_APP_API_URL}user/delete/${record.id}`
+      );
+      setHanleDeleteUserSuccess(!handleDeleteUserSuccess);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+      return;
+    }
   };
 
   const columns: ColumnsType<DataType> = [
@@ -97,9 +110,8 @@ export const UserPage: React.FC<Props> = ({ setLoading }) => {
     },
   ];
 
-  console.log(dataSourceHandled);
   return (
-    <div className="w-full mt-[56px] p-2 lg:p-5">
+    <div className="w-full p-2 lg:p-5">
       <div className="flex justify-end md:justify-between w-full">
         <p className="hidden md:block">Total: {dataSource.length}</p>
       </div>

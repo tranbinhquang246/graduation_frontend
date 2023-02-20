@@ -4,3 +4,4 @@ export { default as ModalChangeDeliveryAddress } from "./modalChangeDeliveryAddr
 export { default as ModalAddProduct } from "./modalAddProduct";
 export { default as ModalAddBanner } from "./modalAddBanner";
 export { default as ModalAddCollection } from "./modalAddCollectionUser";
+export { default as ModalChangeAvatar } from "./modalChangeAvatar";

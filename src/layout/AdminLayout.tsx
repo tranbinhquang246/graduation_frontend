@@ -104,7 +104,7 @@ export const AdminLayout: React.FC<Props> = ({
   return (
     <div className="relative flex flex-col w-full h-full font-ubuntu min-w-[375px]">
       <Header />
-      <div className="w-full h-full flex">
+      <div className="w-full mt-[56px] h-full flex">
         <SideBarAdmin />
         <Outlet />
       </div>

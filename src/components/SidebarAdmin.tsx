@@ -65,7 +65,7 @@ const SidebarAdmin: React.FC = () => {
   };
 
   return (
-    <div className="mt-[56px] h-screen">
+    <div className="h-full">
       <Menu
         className="h-screen"
         defaultSelectedKeys={[location.pathname]}

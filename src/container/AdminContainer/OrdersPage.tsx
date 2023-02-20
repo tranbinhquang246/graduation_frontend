@@ -17,7 +17,8 @@ interface DataType {
 export const OrdersPage: React.FC<Props> = ({ setLoading }) => {
   const [dataSource, setDataSource] = useState<any>([]);
   const [dataSourceHandled, setDataSourceHandled] = useState<any>([]);
-
+  const [handleUpdateOrderSuccess, setHandleUpdateOrderSuccess] =
+    useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,7 +35,7 @@ export const OrdersPage: React.FC<Props> = ({ setLoading }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [handleUpdateOrderSuccess]);
 
   useEffect(() => {
     let handleData: DataType[] = [];
@@ -53,8 +54,31 @@ export const OrdersPage: React.FC<Props> = ({ setLoading }) => {
     }
   }, [dataSource]);
 
-  const handleActionOrder = (record: any) => {
-    console.log("Deleting record: ", record);
+  const handleDeliveredOrder = async (record: any) => {
+    setLoading(true);
+    try {
+      await axiosConfig.patch(
+        `${process.env.REACT_APP_API_URL}orders/${record.id}`,
+        { statusOrder: "delivery" }
+      );
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setHandleUpdateOrderSuccess(!handleUpdateOrderSuccess);
+    }
+  };
+  const handleConfirmOrder = async (record: any) => {
+    setLoading(true);
+    try {
+      await axiosConfig.patch(
+        `${process.env.REACT_APP_API_URL}orders/${record.id}`,
+        { statusOrder: "confirmed" }
+      );
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setHandleUpdateOrderSuccess(!handleUpdateOrderSuccess);
+    }
   };
 
   const columns: ColumnsType<DataType> = [
@@ -92,14 +116,14 @@ export const OrdersPage: React.FC<Props> = ({ setLoading }) => {
       title: "Action",
       render: (text, record) => (
         <span className="text-blue-500 flex flex-col justify-around leading-5">
-          <a onClick={() => handleActionOrder(record)}>Confirm</a>
-          <a onClick={() => handleActionOrder(record)}>Delivered</a>
+          <a onClick={() => handleConfirmOrder(record)}>Confirm</a>
+          <a onClick={() => handleDeliveredOrder(record)}>Delivery</a>
         </span>
       ),
     },
   ];
   return (
-    <div className="w-full mt-[56px] p-2 lg:p-5">
+    <div className="w-full p-2 lg:p-5 overflow-y-scroll">
       <div className="flex justify-end md:justify-between w-full">
         <p className="hidden md:block">Total: {dataSource.length}</p>
       </div>

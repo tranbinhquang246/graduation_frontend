@@ -60,7 +60,7 @@ export const LockupDataPage: React.FC<Props> = ({ setLoading }) => {
   ];
 
   return (
-    <div className="w-full mt-[56px] p-2 lg:p-5">
+    <div className="w-full h-screen overflow-y-scroll p-2 lg:p-5">
       <div className="flex justify-end w-full">
         <button
           className="text-xs border-2 p-2 rounded-sm border-[#1e293b] hover:text-white hover:bg-[#1e293b]"

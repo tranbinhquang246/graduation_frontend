@@ -16,6 +16,7 @@ import discoverPay from "./discoverpay.jpg";
 import delivered from "./delivered.png";
 import Notfound404 from "./404-not-found.jpg";
 import Notfounditem from "./notfounditem.png";
+import AddImage from "./addImage.png";
 export const IMAGES = {
   loginImage,
   logoApp,
@@ -35,4 +36,5 @@ export const IMAGES = {
   delivered,
   Notfound404,
   Notfounditem,
+  AddImage,
 };
