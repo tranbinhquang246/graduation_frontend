@@ -8,6 +8,7 @@ import { setLoading } from "../../redux/loading/actions";
 import { ModalAddDelivery } from "../modalContainer";
 import { handleError } from "../../service";
 import { toast } from "react-toastify";
+import { IMAGES } from "../../assets";
 
 export const EditAddressDelivery: React.FC<Props> = ({
   deliveryAddress,
@@ -77,7 +78,9 @@ export const EditAddressDelivery: React.FC<Props> = ({
           })}
         </>
       ) : (
-        <p>Nothing</p>
+        <div>
+          <img src={IMAGES.Nothing} alt="nothing" />
+        </div>
       )}
       <ModalAddDelivery
         open={openModal}

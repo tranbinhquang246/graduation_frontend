@@ -5,6 +5,7 @@ import { setFavorite } from "../../redux/user-infor/action";
 import axiosConfig from "../../axiosInterceptor/AxioConfig";
 import { CardItem } from "../../components";
 import { setLoading } from "../../redux/loading/actions";
+import { IMAGES } from "../../assets";
 
 export const Favorite: React.FC<Props> = ({
   favorite,
@@ -47,7 +48,9 @@ export const Favorite: React.FC<Props> = ({
           })}
         </div>
       ) : (
-        <div>Nothing</div>
+        <div>
+          <img src={IMAGES.Nothing} alt="nothing" />
+        </div>
       )}
     </>
   );

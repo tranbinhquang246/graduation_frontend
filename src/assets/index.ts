@@ -17,6 +17,7 @@ import delivered from "./delivered.png";
 import Notfound404 from "./404-not-found.jpg";
 import Notfounditem from "./notfounditem.png";
 import AddImage from "./addImage.png";
+import Nothing from "./nothinghere.jpg";
 export const IMAGES = {
   loginImage,
   logoApp,
@@ -37,4 +38,5 @@ export const IMAGES = {
   Notfound404,
   Notfounditem,
   AddImage,
+  Nothing,
 };

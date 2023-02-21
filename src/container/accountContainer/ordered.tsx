@@ -7,6 +7,7 @@ import axiosConfig from "../../axiosInterceptor/AxioConfig";
 import { setOrdered } from "../../redux/order/actions";
 import { OrderedCardComponent } from "../../components";
 import { handleError } from "../../service";
+import { IMAGES } from "../../assets";
 
 export const Ordered: React.FC<Props> = ({ setOrdered, orderDetail }) => {
   const [handleOrderSuccess, setHandleOrderSuccess] = useState(false);
@@ -74,7 +75,9 @@ export const Ordered: React.FC<Props> = ({ setOrdered, orderDetail }) => {
           })}
         </div>
       ) : (
-        <div>Nothing</div>
+        <div>
+          <img src={IMAGES.Nothing} alt="nothing" />
+        </div>
       )}
     </div>
   );
