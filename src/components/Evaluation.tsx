@@ -1,4 +1,4 @@
-import { Avatar } from "antd";
+import { Avatar, Rate } from "antd";
 import React from "react";
 import { UserOutlined } from "@ant-design/icons";
 
@@ -17,7 +17,8 @@ function Evaluation(props: any) {
           <p>{props?.data.user.userInfor?.firstName || "No Name"}</p>
           <p>{props?.data.user.userInfor?.lastName}</p>
         </div>
-        <p>{props?.data.comment}</p>
+        <Rate allowHalf disabled value={props?.data?.rating} className="mb-2" />
+        <p>{props?.data?.comment}</p>
       </div>
     </div>
   );

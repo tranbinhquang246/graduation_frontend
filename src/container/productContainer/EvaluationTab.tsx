@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import axiosConfig from "../../axiosInterceptor/AxioConfig";
-import { Form, Input } from "antd";
+import { Form, Input, Rate } from "antd";
 import { EvaluationCartComponet } from "../../components";
 import { toast } from "react-toastify";
 
@@ -36,7 +36,9 @@ function EvaluationTab(props: { productId: string; isAuthenticated: boolean }) {
         await axiosConfig.patch(
           `${process.env.REACT_APP_API_URL}evaluation/${dataUserEvaluation[0].id}`,
           {
+            productId: parseInt(props?.productId),
             comment: values.comment,
+            rating: values.rating,
           }
         );
         setPostEvaluationSucceed(!postEvaluationSucceed);
@@ -59,7 +61,7 @@ function EvaluationTab(props: { productId: string; isAuthenticated: boolean }) {
       await axiosConfig.post(`${process.env.REACT_APP_API_URL}evaluation`, {
         productId: parseInt(props?.productId),
         comment: values.comment,
-        rating: 5,
+        rating: values.rating,
       });
       setPostEvaluationSucceed(!postEvaluationSucceed);
     } catch (error) {
@@ -74,20 +76,34 @@ function EvaluationTab(props: { productId: string; isAuthenticated: boolean }) {
           <Form
             name="basic"
             onFinish={onFinish}
-            className="flex"
-            initialValues={{}}
+            className="flex flex-col"
+            initialValues={{
+              rating: 5,
+            }}
           >
             <Form.Item
-              label="Your evaluation"
+              label="Rating"
+              name="rating"
+              rules={[{ required: true, message: "Please select star" }]}
+            >
+              <Rate allowHalf />
+            </Form.Item>
+            <Form.Item
+              label="Evaluation"
               name="comment"
               rules={[
-                { required: true, message: "Please input your username!" },
+                { required: true, message: "Please input your evaluation!" },
               ]}
             >
               <Input />
             </Form.Item>
             <Form.Item>
-              <button type="submit">Submit</button>
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Submit
+              </button>
             </Form.Item>
           </Form>
         )}

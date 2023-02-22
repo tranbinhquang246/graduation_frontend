@@ -1,4 +1,4 @@
-import { Button, InputNumber } from "antd";
+import { Button, InputNumber, Rate } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
@@ -79,7 +79,6 @@ const ProductDetail: React.FC<Props> = ({
       fetchData();
     }
   }, [dataProduct]);
-  console.log(dataProductRecommend);
   const onChange = (value: any) => {
     setQuantityOrder(value);
   };
@@ -105,9 +104,13 @@ const ProductDetail: React.FC<Props> = ({
             />
           </div>
           <div className="flex flex-col justify-start w-full md:w-1/2 min-h-[550px] p-5">
-            <p className="font-bold text-xl mb-1 mt-2">
-              {dataProduct?.data?.name}
-            </p>
+            <p className="font-bold text-xl mt-1">{dataProduct?.data?.name}</p>
+            <Rate
+              allowHalf
+              disabled
+              defaultValue={dataProduct?.data?.rating}
+              className="mb-2"
+            />
             {dataProduct?.data?.salePrice === dataProduct?.data?.price ? (
               <div className="h-[0px]" />
             ) : (
