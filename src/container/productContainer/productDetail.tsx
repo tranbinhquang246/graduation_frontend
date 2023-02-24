@@ -15,6 +15,7 @@ import SlideShow from "./SlideShow";
 import { setLoading } from "../../redux/loading/actions";
 import { toast } from "react-toastify";
 import { CardItem } from "../../components";
+import { setAddEvaluationSuccess } from "../../redux/evaluation/actions";
 
 const ProductDetail: React.FC<Props> = ({
   loading,
@@ -22,8 +23,11 @@ const ProductDetail: React.FC<Props> = ({
   addCartRequest,
   isAuthenticated,
   setLoading,
+  setAddEvaluationSuccess,
+  addEvaluation,
 }) => {
   const [dataProduct, setDataProduct] = useState<any>();
+  const [ratingProduct, setRatingProduct] = useState<any>();
   const [dataProductRecommend, setDataProductRecommend] = useState<any>();
   const [quantityOrder, setQuantityOrder] = useState<any>(1);
   const location = useLocation();
@@ -50,8 +54,30 @@ const ProductDetail: React.FC<Props> = ({
         });
       }
     };
-    fetchData();
+    if (location) {
+      fetchData();
+      return;
+    }
+    return;
   }, [location]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}products/rating/${idProduct}`
+        );
+        setRatingProduct(response?.data?.rating);
+      } catch (error) {
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [addEvaluation]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,9 +101,11 @@ const ProductDetail: React.FC<Props> = ({
         setLoading(false);
       }
     };
-    if (dataProduct) {
+    if (dataProduct?.data) {
       fetchData();
+      return;
     }
+    return;
   }, [dataProduct]);
   const onChange = (value: any) => {
     setQuantityOrder(value);
@@ -105,12 +133,7 @@ const ProductDetail: React.FC<Props> = ({
           </div>
           <div className="flex flex-col justify-start w-full md:w-1/2 min-h-[550px] p-5">
             <p className="font-bold text-xl mt-1">{dataProduct?.data?.name}</p>
-            <Rate
-              allowHalf
-              disabled
-              defaultValue={dataProduct?.data?.rating}
-              className="mb-2"
-            />
+            <Rate allowHalf disabled value={ratingProduct} className="mb-2" />
             {dataProduct?.data?.salePrice === dataProduct?.data?.price ? (
               <div className="h-[0px]" />
             ) : (
@@ -241,6 +264,7 @@ const ProductDetail: React.FC<Props> = ({
         <EvaluationProduct
           productId={idProduct}
           isAuthenticated={isAuthenticated}
+          setAddEvaluationSuccess={setAddEvaluationSuccess}
         />
         <div className="p-5">
           <p className="font-medium text-lg border-b-2 w-1/5 border-slate-800">
@@ -273,9 +297,14 @@ const mapStateToProps = (state: RootState) => {
     cartId: state.cartReducer.cartId,
     loading: state.cartReducer.loading,
     isAuthenticated: state.authReducer.isAuthenticated,
+    addEvaluation: state.evaluationReducer.addEvaluation,
   };
 };
 
-const mapDispatchToProps = { addCartRequest, setLoading };
+const mapDispatchToProps = {
+  addCartRequest,
+  setLoading,
+  setAddEvaluationSuccess,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);

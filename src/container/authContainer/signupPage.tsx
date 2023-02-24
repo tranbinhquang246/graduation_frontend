@@ -118,7 +118,7 @@ const SignupPage: React.FC<Props> = ({
                 htmlType="submit"
                 className="w-full h-8 bg-blue-600"
               >
-                Login
+                Sign up
               </Button>
             </Form.Item>
           </Form>

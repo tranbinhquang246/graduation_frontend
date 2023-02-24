@@ -100,7 +100,7 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
             <SideBarProduct />
           </div>
           {dataProducts?.length ? (
-            <div className="flex flex-col w-4/5">
+            <div className="flex flex-col w-4/5 mb-5">
               <div
                 className=" relative z-1 p-5 grid w-full gap-x-3 gap-y-5 justify-items-center"
                 style={{

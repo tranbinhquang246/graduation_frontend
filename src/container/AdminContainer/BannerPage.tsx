@@ -100,7 +100,6 @@ export const BannerPage: React.FC<Props> = ({ setLoading }) => {
     formData.append("content", values.content);
     formData.append("url", values.url);
     formData.append("banner", values.bannerImage.file);
-    console.log(values);
     await axiosConfigUploadImage({
       method: "post",
       url: `${process.env.REACT_APP_API_URL}banner-ads`,

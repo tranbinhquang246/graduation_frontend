@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Form, Input, Modal, Select, Upload } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Modal, Select, Upload, UploadFile } from "antd";
 import { validateImage } from "../../service";
 import { GrFormAdd } from "react-icons/gr";
 import TextArea from "antd/es/input/TextArea";
@@ -21,6 +21,7 @@ interface Values {
 interface CollectionFormProps {
   open: boolean;
   dataSelect: { brand: []; color: []; material: []; design: []; type: [] };
+  initData: any;
   onCreate: (values: Values) => void;
   onCancel: () => void;
 }
@@ -29,20 +30,39 @@ const uploadButton = (
   <div className="flex flex-col justify-center items-center">
     <GrFormAdd />
     <div style={{ marginTop: 8 }}>
-      Thêm <br /> hình ảnh
+      Add <br /> image
     </div>
   </div>
 );
 
-export const ModalAddProduct: React.FC<CollectionFormProps> = ({
+export const ModalEditProduct: React.FC<CollectionFormProps> = ({
   open,
   dataSelect,
+  initData,
   onCreate,
   onCancel,
 }) => {
   const [form] = Form.useForm();
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    {
+      uid: "1",
+      name: "mainImg",
+      url: initData?.mainImg,
+    },
+  ]);
   const handleChange = (file: any) => setFileList(file?.fileList);
+  const initialValue = {
+    name: initData?.name,
+    quantity: initData?.quantity,
+    price: initData?.price,
+    salePrice: initData?.salePrice,
+    color: initData?.color,
+    material: initData?.material,
+    design: initData?.design,
+    type: initData?.type,
+    brand: initData?.brand,
+    description: initData?.description,
+  };
   return (
     <Modal
       open={open}
@@ -50,7 +70,12 @@ export const ModalAddProduct: React.FC<CollectionFormProps> = ({
       footer={false}
       onCancel={onCancel}
     >
-      <Form form={form} layout="vertical" name="form_in_modal">
+      <Form
+        form={form}
+        layout="vertical"
+        name="form_in_modal"
+        initialValues={initialValue}
+      >
         <Form.Item
           name="name"
           label="Name"
@@ -212,7 +237,8 @@ export const ModalAddProduct: React.FC<CollectionFormProps> = ({
                 onCreate(values);
               })
               .catch((info) => {
-                console.log("Validate Failed:", info);
+                form.resetFields();
+                onCreate(info.values);
               });
           }}
         >
@@ -223,4 +249,4 @@ export const ModalAddProduct: React.FC<CollectionFormProps> = ({
   );
 };
 
-export default ModalAddProduct;
+export default ModalEditProduct;

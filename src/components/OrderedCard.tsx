@@ -2,7 +2,6 @@ import React from "react";
 import { IMAGES } from "../assets";
 
 function OrderedCard(props: any) {
-  console.log(props);
   return (
     <div className="flex flex-col bg-slate-100 w-full p-2 m-3">
       <div className="flex justify-end w-full border-b-[1px]">

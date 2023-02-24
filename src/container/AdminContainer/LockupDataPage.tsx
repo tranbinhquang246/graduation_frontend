@@ -29,9 +29,7 @@ export const LockupDataPage: React.FC<Props> = ({ setLoading }) => {
     fetchData();
   }, []);
 
-  const handleDelete = (record: any) => {
-    console.log("Deleting record: ", record);
-  };
+  const handleDelete = (record: any) => {};
 
   const columns: ColumnsType<DataType> = [
     {

@@ -40,6 +40,7 @@ export const HomeLayout: React.FC<Props> = ({
           const response = await axiosConfig.get(
             `${process.env.REACT_APP_API_URL}user/${decodedJwt?.id}`
           );
+          setUserInfor({ userInfor: response?.data?.userInfor });
           setUserRole({ userRole: response?.data?.userRole });
           setCartID({ cardId: response?.data?.Cart.id });
           setQuantityCart({

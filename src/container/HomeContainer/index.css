@@ -9,3 +9,6 @@ max-height:420px !important;
 .default-nav {
 display:none !important
 }
+.ant-pagination-options{
+	display: none !important
+}

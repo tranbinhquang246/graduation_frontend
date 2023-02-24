@@ -5,7 +5,11 @@ import { Form, Input, Rate } from "antd";
 import { EvaluationCartComponet } from "../../components";
 import { toast } from "react-toastify";
 
-function EvaluationTab(props: { productId: string; isAuthenticated: boolean }) {
+function EvaluationTab(props: {
+  productId: string;
+  isAuthenticated: boolean;
+  setAddEvaluationSuccess: any;
+}) {
   const [dataAllEvaluation, setDataAllEvaluation] = useState<any>([]);
   const [dataUserEvaluation, setDataUserEvaluation] = useState<any>([]);
   const [postEvaluationSucceed, setPostEvaluationSucceed] =
@@ -41,6 +45,7 @@ function EvaluationTab(props: { productId: string; isAuthenticated: boolean }) {
             rating: values.rating,
           }
         );
+        props?.setAddEvaluationSuccess();
         setPostEvaluationSucceed(!postEvaluationSucceed);
         toast.success("Success", {
           position: "top-right",
@@ -63,6 +68,7 @@ function EvaluationTab(props: { productId: string; isAuthenticated: boolean }) {
         comment: values.comment,
         rating: values.rating,
       });
+      props?.setAddEvaluationSuccess();
       setPostEvaluationSucceed(!postEvaluationSucceed);
     } catch (error) {
       console.log(error);

@@ -24,6 +24,7 @@ const HomePage: React.FC<Props> = ({ setLoading, isAuthenticated }) => {
   const [saleProducts, setSaleProducts] = useState([]);
   const [imageSlider, setImageSlider] = useState<any>([]);
   const [handeledimageSlider, setHandledImageSlider] = useState<any>([]);
+  const [handeleCollectionImages, setHandleCollectionImages] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,9 +38,13 @@ const HomePage: React.FC<Props> = ({ setLoading, isAuthenticated }) => {
         const banner = await axios.get(
           `${process.env.REACT_APP_API_URL}banner-ads`
         );
+        const collectionsImages = await axios.get(
+          `${process.env.REACT_APP_API_URL}collection-images`
+        );
         setNewestProducts(newest?.data);
         setSaleProducts(sale?.data);
         setImageSlider(banner?.data);
+        setHandleCollectionImages(collectionsImages?.data);
       } catch (error) {
         handleError(error);
       } finally {
@@ -245,11 +250,11 @@ const HomePage: React.FC<Props> = ({ setLoading, isAuthenticated }) => {
           </p>
         </div>
         <Zoom scale={1.4} indicators={true}>
-          {handeledimageSlider.map((each: any, index: number) => (
+          {handeleCollectionImages.map((each: any, index: number) => (
             <div key={index} style={{ width: "100%" }}>
               <img
                 style={{ objectFit: "contain", width: "100%" }}
-                src={each}
+                src={each?.link}
                 alt={String(index)}
               />
             </div>

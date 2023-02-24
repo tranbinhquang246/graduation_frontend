@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import type { ColumnsType } from "antd/es/table";
-import { ModalAddProduct } from "../modalContainer";
+import { ModalAddProduct, ModalEditProduct } from "../modalContainer";
 import { setLoading } from "../../redux/loading/actions";
 import axiosConfig from "../../axiosInterceptor/AxioConfig";
 import {
@@ -34,7 +34,9 @@ interface DataType {
 }
 export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
   const [openModal, setOpenModal] = useState(false);
+  const [openModalEdit, setOpenModalEdit] = useState(false);
   const [dataSource, setDataSource] = useState<any>([]);
+  const [dataProductEdit, setDataProductEdit] = useState<any>();
   const [lockupDataSource, setLockupDataSource] = useState<any>();
   const [lockupDataHanldedSource, setLockupDataHanldedSource] =
     useState<LockupData>();
@@ -159,9 +161,13 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
       });
   };
   const handleEdit = (record: any) => {
-    console.log("Editing record: ", record);
+    setDataProductEdit(dataSource[record.id - 1]);
+    setOpenModalEdit(true);
   };
 
+  const onSaveEditProduct = async (value: any) => {
+    console.log(value);
+  };
   const handleDelete = async (record: any) => {
     setLoading(true);
     try {
@@ -198,6 +204,15 @@ export const ProductsPage: React.FC<Props> = ({ setLoading }) => {
         dataSelect={lockupDataForSelect}
         onCancel={() => {
           setOpenModal(false);
+        }}
+      />
+      <ModalEditProduct
+        open={openModalEdit}
+        onCreate={onSaveEditProduct}
+        dataSelect={lockupDataForSelect}
+        initData={dataProductEdit}
+        onCancel={() => {
+          setOpenModalEdit(false);
         }}
       />
     </div>

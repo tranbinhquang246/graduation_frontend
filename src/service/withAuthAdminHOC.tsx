@@ -9,7 +9,6 @@ export const withAuthAdmin =
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     useEffect(() => {
-      console.log("comehere");
       checkAuth();
     }, []);
     const checkAuth = async () => {

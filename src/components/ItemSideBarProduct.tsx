@@ -1,8 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { RadioChangeEvent, Space } from "antd";
-import { Radio } from "antd";
 import { useSearchParams } from "react-router-dom";
 import "./radiobutton.css";
 import type { MenuProps } from "antd";
@@ -77,6 +75,7 @@ export const ItemSideBarProduct = (props: {
       return;
     }
     searchParams.set(props.param, e.key);
+    searchParams.delete("page");
     setSearchParams(searchParams);
   };
 

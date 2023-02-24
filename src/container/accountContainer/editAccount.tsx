@@ -13,7 +13,6 @@ const EditAccount: React.FC<Props> = ({ userInfor, setUserInforSuccess }) => {
   useEffect(() => {
     initialValues.firstName = userInfor?.firstName;
     initialValues.lastName = userInfor?.lastName;
-    console.log(initialValues);
   }, [userInfor]);
   const onFinishInfor = async (values: any) => {
     setUserInforSuccess(false);
@@ -65,9 +64,7 @@ const EditAccount: React.FC<Props> = ({ userInfor, setUserInforSuccess }) => {
     }
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
+  const onFinishFailed = (errorInfo: any) => {};
   return (
     <div>
       <div>

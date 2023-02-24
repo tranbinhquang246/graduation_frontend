@@ -24,7 +24,7 @@ function Favorite(props: { productId: number; isAuthenticated: boolean }) {
       }
     };
     fetchData();
-  }, [changeSuccess, props?.isAuthenticated]);
+  }, [changeSuccess, props?.isAuthenticated, props?.productId]);
   const handleClickHeart = async () => {
     if (props?.isAuthenticated) {
       if (!isLiked) {

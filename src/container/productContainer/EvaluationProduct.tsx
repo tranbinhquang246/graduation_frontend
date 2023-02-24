@@ -39,6 +39,7 @@ const ReturnPoilicyTab = () => {
 const EvaluationProduct = (props: {
   productId: string;
   isAuthenticated: boolean;
+  setAddEvaluationSuccess: any;
 }) => {
   return (
     <div className="p-5">
@@ -52,6 +53,7 @@ const EvaluationProduct = (props: {
               <EvaluationTab
                 productId={props?.productId}
                 isAuthenticated={props?.isAuthenticated}
+                setAddEvaluationSuccess={props?.setAddEvaluationSuccess}
               />
             ),
           },
