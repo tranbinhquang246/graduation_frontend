@@ -111,6 +111,9 @@ export const HeaderSection: React.FC<Props> = ({
         src={IMAGES.logoApp}
         alt="logo"
         className="h-full w-[50px] p-1 ml-4 hidden sm:block"
+        onClick={() => {
+          navigate("/");
+        }}
       ></img>
       <div className=" flex justify-start ml-5 sm:ml-0 sm:justify-center items-center h-full w-full">
         <div className="flex m-2 h-full items-center">

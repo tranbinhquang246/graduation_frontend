@@ -9,8 +9,9 @@ import {
   PieChartOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Button, Menu } from "antd";
+import { Menu } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
+import "./styles/sidebarAdmin.css";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -65,9 +66,9 @@ const SidebarAdmin: React.FC = () => {
   };
 
   return (
-    <div className="h-full">
+    <div className="">
       <Menu
-        className="h-screen"
+        className="h-full min-h-screen"
         defaultSelectedKeys={[location.pathname]}
         mode="inline"
         theme="dark"

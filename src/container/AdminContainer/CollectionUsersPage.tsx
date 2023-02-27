@@ -72,7 +72,7 @@ export const CollectionUsersPage: React.FC<Props> = ({ setLoading }) => {
         if (record.link) {
           return (
             <img
-              className="w-[100px] h-[100px]"
+              className="w-[200px] h-[100px]"
               src={record.link}
               alt="bannerimg"
             />
